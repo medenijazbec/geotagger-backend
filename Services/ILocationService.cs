@@ -1,0 +1,12 @@
+﻿using geotagger_backend.Data;
+using geotagger_backend.DTOs;
+using geotagger_backend.Models;
+
+namespace geotagger_backend.Services
+{
+    public interface ILocationService
+    {
+        Task<LocationDto> UploadLocationAsync(string userId, LocationUploadDto dto, string bucketBaseUrl);
+        Task<IEnumerable<LocationDto>> GetActiveLocationsAsync(int page, int pageSize);
+    }
+}

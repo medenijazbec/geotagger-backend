@@ -1,0 +1,35 @@
+﻿using geotagger_backend.DTOs;
+using geotagger_backend.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace geotagger_backend.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class LocationsController : ControllerBase
+    {
+        private readonly ILocationService _svc;
+        private readonly IConfiguration _cfg;
+        public LocationsController(ILocationService svc, IConfiguration cfg) { _svc = svc; _cfg = cfg; }
+
+        [HttpPost]
+        [Authorize]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Upload([FromForm] LocationUploadDto dto)
+        {
+            var userId = User.FindFirst("id")?.Value;
+            if (userId == null) return Unauthorized();
+            var baseUrl = _cfg.GetValue<string>("StaticBaseUrl") ?? string.Empty;
+            var loc = await _svc.UploadLocationAsync(userId, dto, baseUrl);
+            return Ok(loc);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Browse([FromQuery] int page = 1, [FromQuery] int size = 20)
+        {
+            var list = await _svc.GetActiveLocationsAsync(page, size);
+            return Ok(list);
+        }
+    }
+}

@@ -11,6 +11,7 @@ using System.IO;
 using System.Security.Claims;
 using Microsoft.Extensions.FileProviders;
 using System;
+using geotagger_backend.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +30,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IGuessService, GuessService>();
+// action logging endpoint middleware
+builder.Services.AddTransient<ActionLoggingMiddleware>();
 /*
 builder.Services.AddCors(options =>
 {
@@ -247,6 +251,9 @@ app.UseStaticFiles(new StaticFileOptions
 
 
 app.UseRouting();
+
+// after app.UseRouting();
+app.UseMiddleware<ActionLoggingMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

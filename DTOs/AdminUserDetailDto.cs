@@ -6,6 +6,6 @@ namespace geotagger_backend.DTOs.Admin
     public class AdminUserDetailDto : AdminUserListDto
     {
         // all the auctions this user has created
-        public List<AuctionResponseDto> Auctions { get; set; } = new();
+        //public List<AuctionResponseDto> Auctions { get; set; } = new();
     }
 }

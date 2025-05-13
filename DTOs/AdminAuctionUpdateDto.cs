@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace geotagger_backend.DTOs.Admin
 {
-    public class AdminAuctionUpdateDto
+    /*public class AdminAuctionUpdateDto
     {
         [Required, StringLength(100, MinimumLength = 5)]
         public string Title { get; set; } = string.Empty;
@@ -23,5 +23,5 @@ namespace geotagger_backend.DTOs.Admin
 
         public string? MainImageUrl { get; set; }
         public string? ThumbnailUrl { get; set; }
-    }
+    }*/
 }

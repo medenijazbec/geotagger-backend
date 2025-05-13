@@ -3,16 +3,108 @@
   "WorkspaceRootPath": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\services\\iguessservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:services\\iguessservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\dtos\\adminuserlistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:dtos\\adminuserlistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\dtos\\adminauctionupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:dtos\\adminauctionupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\dtos\\adminuserdetaildto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:dtos\\adminuserdetaildto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\services\\locationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:services\\locationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\services\\ilocationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:services\\ilocationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\services\\guessservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:services\\guessservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\middleware\\actionloggingmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:middleware\\actionloggingmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\controllers\\locationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:controllers\\locationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\controllers\\imageuploadcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:controllers\\imageuploadcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\controllers\\guesscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:controllers\\guesscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\geotagger-backend.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:geotagger-backend.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\dtos\\locationuploaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:dtos\\locationuploaddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\dtos\\guessdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:dtos\\guessdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\models\\geouseractionlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:models\\geouseractionlog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\models\\geopointstransaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:models\\geopointstransaction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\models\\geoguess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:models\\geoguess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\models\\geolocation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:models\\geolocation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\models\\geouser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:models\\geouser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\services\\inotificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -79,40 +171,8 @@
       "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:dtos\\adminuserupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\dtos\\adminauctionupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:dtos\\adminauctionupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:controllers\\profilecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\controllers\\imageuploadcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:controllers\\imageuploadcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\dtos\\adminuserlistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:dtos\\adminuserlistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\dtos\\adminuserdetaildto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:dtos\\adminuserdetaildto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -122,50 +182,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "Services\\AuthService.cs",
-              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\AuthService.cs",
-              "RelativeToolTip": "Services\\AuthService.cs",
-              "ViewState": "AgIAAHsAAAAAAAAAAAAkwLgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:19.778Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "IAuthService.cs",
-              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\IAuthService.cs",
-              "RelativeDocumentMoniker": "Services\\IAuthService.cs",
-              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\IAuthService.cs",
-              "RelativeToolTip": "Services\\IAuthService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Title": "AdminUserListDto.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminUserListDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\AdminUserListDto.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminUserListDto.cs",
+              "RelativeToolTip": "DTOs\\AdminUserListDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:26.453Z",
+              "WhenOpened": "2025-05-13T15:58:16.236Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "INotificationService.cs",
-              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\INotificationService.cs",
-              "RelativeDocumentMoniker": "Services\\INotificationService.cs",
-              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\INotificationService.cs",
-              "RelativeToolTip": "Services\\INotificationService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:57:39.05Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "NotificationService.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\NotificationService.cs",
               "RelativeDocumentMoniker": "Services\\NotificationService.cs",
@@ -178,7 +212,33 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABgAAABIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T15:58:17.524Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "IGuessService.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\IGuessService.cs",
+              "RelativeDocumentMoniker": "Services\\IGuessService.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\IGuessService.cs",
+              "RelativeToolTip": "Services\\IGuessService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:15:12.788Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -191,20 +251,316 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
+              "Title": "AdminAuctionUpdateDto.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminAuctionUpdateDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\AdminAuctionUpdateDto.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminAuctionUpdateDto.cs",
+              "RelativeToolTip": "DTOs\\AdminAuctionUpdateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T23:33:00.651Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AdminUserDetailDto.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminUserDetailDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\AdminUserDetailDto.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminUserDetailDto.cs",
+              "RelativeToolTip": "DTOs\\AdminUserDetailDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T15:58:14.846Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAPoAAAAAAAAAAADwvywBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAEBAAAAAAAAAADwvyIBAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-12T23:17:12.976Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "Controllers\\AdminController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvxQAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T23:33:54.556Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ProfileController.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\ProfileController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ProfileController.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\ProfileController.cs",
+              "RelativeToolTip": "Controllers\\ProfileController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAALUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T23:35:07.607Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "LocationService.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\LocationService.cs",
+              "RelativeDocumentMoniker": "Services\\LocationService.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\LocationService.cs",
+              "RelativeToolTip": "Services\\LocationService.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAkwGIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:22:56.334Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ILocationService.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\ILocationService.cs",
+              "RelativeDocumentMoniker": "Services\\ILocationService.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\ILocationService.cs",
+              "RelativeToolTip": "Services\\ILocationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:14:52.926Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "GuessService.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\GuessService.cs",
+              "RelativeDocumentMoniker": "Services\\GuessService.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\GuessService.cs",
+              "RelativeToolTip": "Services\\GuessService.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAiwDMAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:15:28.85Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ActionLoggingMiddleware.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Middleware\\ActionLoggingMiddleware.cs",
+              "RelativeDocumentMoniker": "Middleware\\ActionLoggingMiddleware.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Middleware\\ActionLoggingMiddleware.cs",
+              "RelativeToolTip": "Middleware\\ActionLoggingMiddleware.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:16:11.53Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "LocationsController.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\LocationsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LocationsController.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\LocationsController.cs",
+              "RelativeToolTip": "Controllers\\LocationsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:16:39.039Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ImageUploadController.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\ImageUploadController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ImageUploadController.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\ImageUploadController.cs",
+              "RelativeToolTip": "Controllers\\ImageUploadController.cs",
+              "ViewState": "AgIAADoAAAAAAAAAAAAkwHcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T23:35:05.36Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "GuessController.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\GuessController.cs",
+              "RelativeDocumentMoniker": "Controllers\\GuessController.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\GuessController.cs",
+              "RelativeToolTip": "Controllers\\GuessController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:16:55.291Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AgIAAFcAAAAAAAAAAAAYwIoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T23:35:00.071Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "geotagger-backend.http",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\geotagger-backend.http",
+              "RelativeDocumentMoniker": "geotagger-backend.http",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\geotagger-backend.http",
+              "RelativeToolTip": "geotagger-backend.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2025-05-13T16:17:56.314Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "GuessDto.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\GuessDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\GuessDto.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\GuessDto.cs",
+              "RelativeToolTip": "DTOs\\GuessDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:14:08.861Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "LocationUploadDto.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\LocationUploadDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\LocationUploadDto.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\LocationUploadDto.cs",
+              "RelativeToolTip": "DTOs\\LocationUploadDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:13:56.921Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "GeoUserActionLog.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\GeoUserActionLog.cs",
+              "RelativeDocumentMoniker": "Models\\GeoUserActionLog.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\GeoUserActionLog.cs",
+              "RelativeToolTip": "Models\\GeoUserActionLog.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:13:45.721Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "GeoPointsTransaction.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\GeoPointsTransaction.cs",
+              "RelativeDocumentMoniker": "Models\\GeoPointsTransaction.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\GeoPointsTransaction.cs",
+              "RelativeToolTip": "Models\\GeoPointsTransaction.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:13:33.925Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "GeoGuess.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\GeoGuess.cs",
+              "RelativeDocumentMoniker": "Models\\GeoGuess.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\GeoGuess.cs",
+              "RelativeToolTip": "Models\\GeoGuess.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:10:32.781Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "GeoLocation.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\GeoLocation.cs",
+              "RelativeDocumentMoniker": "Models\\GeoLocation.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\GeoLocation.cs",
+              "RelativeToolTip": "Models\\GeoLocation.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:10:21.626Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "GeoUser.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\GeoUser.cs",
+              "RelativeDocumentMoniker": "Models\\GeoUser.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\GeoUser.cs",
+              "RelativeToolTip": "Models\\GeoUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:10:00.186Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\AuthService.cs",
+              "RelativeToolTip": "Services\\AuthService.cs",
+              "ViewState": "AgIAAHsAAAAAAAAAAAAkwLgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T15:58:19.778Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\IAuthService.cs",
+              "RelativeDocumentMoniker": "Services\\IAuthService.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\IAuthService.cs",
+              "RelativeToolTip": "Services\\IAuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T15:58:26.453Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "INotificationService.cs",
+              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\INotificationService.cs",
+              "RelativeDocumentMoniker": "Services\\INotificationService.cs",
+              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\INotificationService.cs",
+              "RelativeToolTip": "Services\\INotificationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T15:57:39.05Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
               "Title": "RefreshToken.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\RefreshToken.cs",
               "RelativeDocumentMoniker": "Models\\RefreshToken.cs",
@@ -212,12 +568,11 @@
               "RelativeToolTip": "Models\\RefreshToken.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:29.77Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:29.77Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 30,
               "Title": "Notification.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\Notification.cs",
               "RelativeDocumentMoniker": "Models\\Notification.cs",
@@ -225,12 +580,11 @@
               "RelativeToolTip": "Models\\Notification.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:28.743Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:28.743Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 31,
               "Title": "JwtSettings.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\JwtSettings.cs",
               "RelativeDocumentMoniker": "Models\\JwtSettings.cs",
@@ -238,12 +592,11 @@
               "RelativeToolTip": "Models\\JwtSettings.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:27.585Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:27.585Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 32,
               "Title": "ApplicationUser.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Models\\ApplicationUser.cs",
               "RelativeDocumentMoniker": "Models\\ApplicationUser.cs",
@@ -251,12 +604,11 @@
               "RelativeToolTip": "Models\\ApplicationUser.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:19.055Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:19.055Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 33,
               "Title": "UpdateProfileDto.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\UpdateProfileDto.cs",
               "RelativeDocumentMoniker": "DTOs\\UpdateProfileDto.cs",
@@ -264,12 +616,11 @@
               "RelativeToolTip": "DTOs\\UpdateProfileDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:31.998Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:31.998Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 34,
               "Title": "UpdatePasswordDto.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\UpdatePasswordDto.cs",
               "RelativeDocumentMoniker": "DTOs\\UpdatePasswordDto.cs",
@@ -277,12 +628,11 @@
               "RelativeToolTip": "DTOs\\UpdatePasswordDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:31.481Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:31.481Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 35,
               "Title": "ResetPasswordDto.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\ResetPasswordDto.cs",
               "RelativeDocumentMoniker": "DTOs\\ResetPasswordDto.cs",
@@ -290,12 +640,11 @@
               "RelativeToolTip": "DTOs\\ResetPasswordDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:30.924Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:30.924Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 36,
               "Title": "RegisterDto.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\RegisterDto.cs",
               "RelativeDocumentMoniker": "DTOs\\RegisterDto.cs",
@@ -303,12 +652,11 @@
               "RelativeToolTip": "DTOs\\RegisterDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:30.32Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:30.32Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 37,
               "Title": "RefreshResponseDto.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\RefreshResponseDto.cs",
               "RelativeDocumentMoniker": "DTOs\\RefreshResponseDto.cs",
@@ -316,12 +664,11 @@
               "RelativeToolTip": "DTOs\\RefreshResponseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:29.245Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:29.245Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 38,
               "Title": "LoginDto.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\LoginDto.cs",
               "RelativeDocumentMoniker": "DTOs\\LoginDto.cs",
@@ -329,12 +676,11 @@
               "RelativeToolTip": "DTOs\\LoginDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:28.128Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:28.128Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 39,
               "Title": "FutureDateAttribute.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\FutureDateAttribute.cs",
               "RelativeDocumentMoniker": "DTOs\\FutureDateAttribute.cs",
@@ -342,12 +688,11 @@
               "RelativeToolTip": "DTOs\\FutureDateAttribute.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:25.846Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:25.846Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 40,
               "Title": "ForgotPasswordDto.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\ForgotPasswordDto.cs",
               "RelativeDocumentMoniker": "DTOs\\ForgotPasswordDto.cs",
@@ -355,12 +700,11 @@
               "RelativeToolTip": "DTOs\\ForgotPasswordDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:25.222Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:25.222Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 41,
               "Title": "AdminUserUpdateDto.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminUserUpdateDto.cs",
               "RelativeDocumentMoniker": "DTOs\\AdminUserUpdateDto.cs",
@@ -368,90 +712,11 @@
               "RelativeToolTip": "DTOs\\AdminUserUpdateDto.cs",
               "ViewState": "AgIAAAIAAAAAAAAAAAAAAAIAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:16.923Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:16.923Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
-              "Title": "AdminAuctionUpdateDto.cs",
-              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminAuctionUpdateDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\AdminAuctionUpdateDto.cs",
-              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminAuctionUpdateDto.cs",
-              "RelativeToolTip": "DTOs\\AdminAuctionUpdateDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-12T23:33:00.651Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Data\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
-              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:17.524Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "ProfileController.cs",
-              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\ProfileController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ProfileController.cs",
-              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\ProfileController.cs",
-              "RelativeToolTip": "Controllers\\ProfileController.cs",
-              "ViewState": "AgIAADIBAAAAAAAAAAAYwG4BAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-12T23:35:07.607Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "ImageUploadController.cs",
-              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\ImageUploadController.cs",
-              "RelativeDocumentMoniker": "Controllers\\ImageUploadController.cs",
-              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\ImageUploadController.cs",
-              "RelativeToolTip": "Controllers\\ImageUploadController.cs",
-              "ViewState": "AgIAADkAAAAAAAAAAAA7wHcAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-12T23:35:05.36Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AgIAAE0AAAAAAAAAAAA3wIoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-12T23:35:00.071Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
-              "Title": "AdminController.cs",
-              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\AdminController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
-              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Controllers\\AdminController.cs",
-              "RelativeToolTip": "Controllers\\AdminController.cs",
-              "ViewState": "AgIAABEBAAAAAAAAAADwv08BAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-12T23:33:54.556Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 42,
               "Title": "Dockerfile",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Dockerfile",
               "RelativeDocumentMoniker": "Dockerfile",
@@ -459,34 +724,7 @@
               "RelativeToolTip": "Dockerfile",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-05-13T15:58:21.99Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 26,
-              "Title": "AdminUserListDto.cs",
-              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminUserListDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\AdminUserListDto.cs",
-              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminUserListDto.cs",
-              "RelativeToolTip": "DTOs\\AdminUserListDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:16.236Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 27,
-              "Title": "AdminUserDetailDto.cs",
-              "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminUserDetailDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\AdminUserDetailDto.cs",
-              "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\AdminUserDetailDto.cs",
-              "RelativeToolTip": "DTOs\\AdminUserDetailDto.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAAAAMAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:14.846Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:21.99Z"
             }
           ]
         }
