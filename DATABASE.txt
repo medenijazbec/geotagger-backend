@@ -1,0 +1,470 @@
+-- ======================================================================
+--  GEO-TAGGER / GUESS-THE-LOCATION  —  FULL DATABASE (MySQL 8.2)
+-- ======================================================================
+
+SET NAMES utf8mb4;
+SET sql_mode = 'STRICT_ALL_TABLES';
+SET time_zone = '+00:00';
+
+-- ----------------------------------------------------------------------
+-- 1.  ASP-NET Core Identity
+-- ----------------------------------------------------------------------
+CREATE TABLE AspNetRoles (
+  Id               VARCHAR(300)  NOT NULL,
+  Name             VARCHAR(256)  NULL,
+  NormalizedName   VARCHAR(256)  NULL,
+  ConcurrencyStamp VARCHAR(256)  NULL,
+  PRIMARY KEY (Id),
+  UNIQUE KEY IX_AspNetRoles_NormalizedName (NormalizedName)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ------------------------------------------------------------
+-- Users
+CREATE TABLE AspNetUsers (
+  Id                   VARCHAR(450) NOT NULL,
+  UserName             VARCHAR(256) NULL,
+  NormalizedUserName   VARCHAR(256) NULL,
+  Email                VARCHAR(256) NULL,
+  NormalizedEmail      VARCHAR(256) NULL,
+  EmailConfirmed       BIT          NOT NULL DEFAULT 0,
+  PasswordHash         TEXT         NULL,
+  SecurityStamp        TEXT         NULL,
+  ConcurrencyStamp     TEXT         NULL,
+  PhoneNumber          VARCHAR(50)  NULL,
+  PhoneNumberConfirmed BIT          NOT NULL DEFAULT 0,
+  TwoFactorEnabled     BIT          NOT NULL DEFAULT 0,
+  LockoutEnd           DATETIME     NULL,
+  LockoutEnabled       BIT          NOT NULL DEFAULT 1,
+  AccessFailedCount    INT          NOT NULL DEFAULT 0,
+  -- profile extras
+  FirstName            VARCHAR(100) NULL,
+  LastName             VARCHAR(100) NULL,
+  ProfilePictureUrl    VARCHAR(300) NULL,
+  PRIMARY KEY (Id),
+  UNIQUE KEY IX_AspNetUsers_NormalizedUserName (NormalizedUserName),
+  UNIQUE KEY IX_AspNetUsers_NormalizedEmail    (NormalizedEmail)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- ------------------------------------------------------------
+-- Role claims
+CREATE TABLE AspNetRoleClaims (
+  Id         INT          NOT NULL AUTO_INCREMENT,
+  RoleId     VARCHAR(450) NOT NULL,
+  ClaimType  TEXT NULL,
+  ClaimValue TEXT NULL,
+  PRIMARY KEY (Id),
+  CONSTRAINT FK_AspNetRoleClaims_Roles
+      FOREIGN KEY (RoleId) REFERENCES AspNetRoles (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- ------------------------------------------------------------
+-- User claims
+CREATE TABLE AspNetUserClaims (
+  Id         INT          NOT NULL AUTO_INCREMENT,
+  UserId     VARCHAR(450) NOT NULL,
+  ClaimType  TEXT NULL,
+  ClaimValue TEXT NULL,
+  PRIMARY KEY (Id),
+  CONSTRAINT FK_AspNetUserClaims_Users
+      FOREIGN KEY (UserId) REFERENCES AspNetUsers (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ------------------------------------------------------------
+-- External logins
+CREATE TABLE AspNetUserLogins (
+  LoginProvider       VARCHAR(280) NOT NULL,
+  ProviderKey         VARCHAR(280) NOT NULL,
+  ProviderDisplayName VARCHAR(100) NULL,
+  UserId              VARCHAR(450) NOT NULL,
+  PRIMARY KEY (LoginProvider, ProviderKey),
+  CONSTRAINT FK_AspNetUserLogins_Users
+      FOREIGN KEY (UserId) REFERENCES AspNetUsers (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ------------------------------------------------------------
+-- User tokens
+CREATE TABLE AspNetUserTokens (
+  UserId        VARCHAR(250) NOT NULL,
+  LoginProvider VARCHAR(256) NOT NULL,
+  Name          VARCHAR(256) NOT NULL,
+  Value         TEXT NULL,
+  PRIMARY KEY (UserId, LoginProvider, Name),
+  CONSTRAINT FK_AspNetUserTokens_Users
+      FOREIGN KEY (UserId) REFERENCES AspNetUsers (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ------------------------------------------------------------
+-- User-roles mapping
+CREATE TABLE AspNetUserRoles (
+  UserId VARCHAR(350) NOT NULL,
+  RoleId VARCHAR(350) NOT NULL,
+  PRIMARY KEY (UserId, RoleId),
+  CONSTRAINT FK_AspNetUserRoles_Users
+      FOREIGN KEY (UserId) REFERENCES AspNetUsers (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT FK_AspNetUserRoles_Roles
+      FOREIGN KEY (RoleId) REFERENCES AspNetRoles (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+CREATE TABLE GeoUsers (
+  UserId                 VARCHAR(450) NOT NULL,
+  GamePoints             INT          NOT NULL DEFAULT 10,
+  TotalLocationsUploaded INT          NOT NULL DEFAULT 0,
+  TotalGuessesMade       INT          NOT NULL DEFAULT 0,
+  CreatedAt              DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (UserId),
+  CONSTRAINT FK_GeoUsers_User
+      FOREIGN KEY (UserId) REFERENCES AspNetUsers (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 2.1.a  Points ledger  (NEW)
+CREATE TABLE GeoPointsTransactions (
+  TransactionId   BIGINT       NOT NULL AUTO_INCREMENT,
+  UserId          VARCHAR(450) NOT NULL,
+  LocationId      INT          NULL,
+  GuessId         INT          NULL,
+  PointsDelta     INT          NOT NULL,
+  Reason          ENUM(
+      'registration_bonus',
+      'upload_reward',
+      'guess_cost'
+  ) NOT NULL,
+  CreatedAt       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (TransactionId),
+  CONSTRAINT FK_GPT_User
+      FOREIGN KEY (UserId)    REFERENCES AspNetUsers  (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 2.2  Locations (image + ground-truth position)
+CREATE TABLE GeoLocations (
+  LocationId      INT          NOT NULL AUTO_INCREMENT,
+  UploaderId      VARCHAR(450) NOT NULL,
+  S3OriginalKey   VARCHAR(512) NOT NULL,
+  S3ThumbnailKey  VARCHAR(512) NULL,
+  Title           VARCHAR(255) NULL,
+  Description     TEXT         NULL,
+  Latitude        DECIMAL(9,6) NOT NULL,
+  Longitude       DECIMAL(9,6) NOT NULL,
+  CreatedAt       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  IsActive        TINYINT(1)   NOT NULL DEFAULT 1,
+  PRIMARY KEY (LocationId),
+  CONSTRAINT FK_Locations_User
+      FOREIGN KEY (UploaderId) REFERENCES AspNetUsers (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE,
+  INDEX IX_Locations_UploaderId (UploaderId),
+  INDEX IX_Locations_Coords     (Latitude, Longitude)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 2.3  Player guesses
+CREATE TABLE GeoGuesses (
+  GuessId       INT          NOT NULL AUTO_INCREMENT,
+  LocationId    INT          NOT NULL,
+  UserId        VARCHAR(450) NOT NULL,
+  Latitude      DECIMAL(9,6) NOT NULL,
+  Longitude     DECIMAL(9,6) NOT NULL,
+  ErrorMeters   DECIMAL(10,2) NULL,
+  AttemptNumber INT          NOT NULL,
+  CreatedAt     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (GuessId),
+  CONSTRAINT FK_Guesses_Location
+      FOREIGN KEY (LocationId) REFERENCES GeoLocations (LocationId)
+      ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT FK_Guesses_User
+      FOREIGN KEY (UserId) REFERENCES AspNetUsers (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE,
+  UNIQUE KEY UQ_GuessPerAttempt (LocationId, UserId, AttemptNumber),
+  INDEX IX_Guesses_User (UserId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 2.4  Refresh tokens
+CREATE TABLE GeoRefreshTokens (
+  TokenId        BIGINT       NOT NULL AUTO_INCREMENT,
+  UserId         VARCHAR(450) NOT NULL,
+  RefreshToken   CHAR(64)     NOT NULL,
+  ExpiresAt      DATETIME     NOT NULL,
+  CreatedAt      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CreatedByIp    VARCHAR(45)  NULL,
+  RevokedAt      DATETIME     NULL,
+  RevokedByIp    VARCHAR(45)  NULL,
+  ReplacedByToken CHAR(64)    NULL,
+  PRIMARY KEY (TokenId),
+  CONSTRAINT FK_RefreshTokens_User
+      FOREIGN KEY (UserId) REFERENCES AspNetUsers (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE,
+  UNIQUE KEY UQ_RefreshToken (RefreshToken),
+  INDEX IX_RefreshTokens_User (UserId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 2.5  Password-reset tokens
+CREATE TABLE GeoPasswordResetTokens (
+  ResetId    BIGINT       NOT NULL AUTO_INCREMENT,
+  UserId     VARCHAR(450) NOT NULL,
+  Token      CHAR(64)     NOT NULL,
+  ExpiresAt  DATETIME     NOT NULL,
+  UsedAt     DATETIME     NULL,
+  CreatedAt  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (ResetId),
+  CONSTRAINT FK_PasswordReset_User
+      FOREIGN KEY (UserId) REFERENCES AspNetUsers (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE,
+  UNIQUE KEY UQ_PasswordReset_Token (Token),
+  INDEX IX_PasswordReset_User (UserId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 2.6  Notifications
+CREATE TABLE GeoNotifications (
+  NotificationId INT          NOT NULL AUTO_INCREMENT,
+  UserId         VARCHAR(450) NOT NULL,
+  LocationId     INT          NULL,
+  GuessId        INT          NULL,
+  Kind           VARCHAR(50)  NOT NULL,
+  Title          VARCHAR(255) NOT NULL,
+  Message        TEXT         NULL,
+  Timestamp      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  IsRead         TINYINT(1)   NOT NULL DEFAULT 0,
+  PRIMARY KEY (NotificationId),
+  CONSTRAINT FK_Notifications_User
+      FOREIGN KEY (UserId)     REFERENCES AspNetUsers   (Id)
+      ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT FK_Notifications_Location
+      FOREIGN KEY (LocationId) REFERENCES GeoLocations  (LocationId)
+      ON DELETE SET NULL  ON UPDATE CASCADE,
+  CONSTRAINT FK_Notifications_Guess
+      FOREIGN KEY (GuessId)    REFERENCES GeoGuesses    (GuessId)
+      ON DELETE SET NULL  ON UPDATE CASCADE,
+  INDEX IX_Notifications_User (UserId),
+  INDEX IX_Notifications_Time (Timestamp)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 2.7  Front-end action log   (single, high-volume, yearly partitions)
+-- ──────────────────────────────────────────────────────────────────
+-- GeoUserActionLogs  (high-volume, yearly partitions, NO FK)
+-- ──────────────────────────────────────────────────────────────────
+DROP TABLE IF EXISTS GeoUserActionLogs;
+
+CREATE TABLE GeoUserActionLogs (
+  ActionId        BIGINT       NOT NULL AUTO_INCREMENT,
+  UserId          VARCHAR(450) NOT NULL,
+  ActionType      ENUM('click','scroll','added_value','changed_value','removed_value') NOT NULL,
+  ComponentType   VARCHAR(100) NULL,
+  NewValue        TEXT         NULL,
+  Url             VARCHAR(1024) NOT NULL,
+  ActionTimestamp DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (ActionId, ActionTimestamp),          -- PK must include the partitioning column
+  INDEX IX_ActionLogs_User_Time (UserId, ActionTimestamp),
+  INDEX IX_ActionLogs_Url (Url(255))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+PARTITION BY RANGE (YEAR(ActionTimestamp)) (
+  PARTITION p2024 VALUES LESS THAN (2025),
+  PARTITION p2025 VALUES LESS THAN (2026),
+  PARTITION pMax  VALUES LESS THAN MAXVALUE
+);
+
+
+-- ----------------------------------------------------------------------
+-- 3.  ADMIN & UTILITY OBJECTS
+-- ----------------------------------------------------------------------
+
+-- Simple haversine helper  (Earth radius ≈ 6 371 000 m)
+DROP FUNCTION IF EXISTS fn_HaversineDistance;
+DELIMITER //
+CREATE FUNCTION fn_HaversineDistance(
+    lat1 DOUBLE, lon1 DOUBLE,
+    lat2 DOUBLE, lon2 DOUBLE
+) RETURNS DOUBLE
+DETERMINISTIC
+BEGIN
+  DECLARE R INT DEFAULT 6371000;
+  DECLARE dLat DOUBLE;
+  DECLARE dLon DOUBLE;
+  DECLARE a    DOUBLE;
+  DECLARE c    DOUBLE;
+  SET dLat = RADIANS(lat2 - lat1);
+  SET dLon = RADIANS(lon2 - lon1);
+  SET a = SIN(dLat/2)*SIN(dLat/2)
+        + COS(RADIANS(lat1))*COS(RADIANS(lat2))*SIN(dLon/2)*SIN(dLon/2);
+  SET c = 2 * ATAN2(SQRT(a), SQRT(1 - a));
+  RETURN R * c;
+END //
+DELIMITER ;
+
+
+-- Convenience view for the admin dashboard
+CREATE OR REPLACE VIEW vw_GeoAdmin_Last100Actions AS
+SELECT *
+  FROM GeoUserActionLogs
+ ORDER BY ActionTimestamp DESC
+ LIMIT 100;
+
+-- ----------------------------------------------------------------------
+-- 4.  TRIGGERS
+-- ----------------------------------------------------------------------
+
+DELIMITER //
+
+-- 4.1  Initial bonus and GeoUsers row (called from API after Identity user created)
+CREATE TRIGGER trg_InitUser
+AFTER INSERT ON GeoUsers
+FOR EACH ROW
+BEGIN
+  INSERT INTO GeoPointsTransactions(UserId, PointsDelta, Reason)
+  VALUES (NEW.UserId, 10, 'registration_bonus');
+END;
+//
+
+-- 4.2  Maintain running balance (centralised)
+CREATE TRIGGER trg_GeoPointsBalance
+AFTER INSERT ON GeoPointsTransactions
+FOR EACH ROW
+BEGIN
+  UPDATE GeoUsers
+     SET GamePoints = GamePoints + NEW.PointsDelta
+   WHERE UserId = NEW.UserId;
+END;
+//
+
+-- 4.3  Reward: +10 pts on every successful upload
+CREATE TRIGGER trg_LocationReward
+AFTER INSERT ON GeoLocations
+FOR EACH ROW
+BEGIN
+  UPDATE GeoUsers
+     SET TotalLocationsUploaded = TotalLocationsUploaded + 1
+   WHERE UserId = NEW.UploaderId;
+
+  INSERT INTO GeoPointsTransactions(UserId, LocationId, PointsDelta, Reason)
+  VALUES (NEW.UploaderId, NEW.LocationId, 10, 'upload_reward');
+END;
+//
+
+-- 4.4  BEFORE-INSERT on guesses to calculate attempt number & check funds
+CREATE TRIGGER trg_GuessAttempt
+BEFORE INSERT ON GeoGuesses
+FOR EACH ROW
+BEGIN
+  DECLARE v_attempt INT;
+  DECLARE v_cost    INT;
+  DECLARE v_points  INT;
+
+  -- Determine which attempt this is (1-based)
+  SELECT COUNT(*) + 1
+    INTO v_attempt
+    FROM GeoGuesses
+   WHERE LocationId = NEW.LocationId
+     AND UserId     = NEW.UserId
+     FOR UPDATE;
+
+  SET NEW.AttemptNumber = v_attempt;
+
+  -- Cost logic
+  SET v_cost = CASE
+                 WHEN v_attempt = 1 THEN 1
+                 WHEN v_attempt = 2 THEN 2
+                 ELSE 3
+               END;
+
+  -- Check wallet
+  SELECT GamePoints
+    INTO v_points
+    FROM GeoUsers
+   WHERE UserId = NEW.UserId
+     FOR UPDATE;
+
+  IF v_points < v_cost THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Insufficient game points for another guess.';
+  END IF;
+
+  -- Reserve points immediately (optimistic)
+  UPDATE GeoUsers
+     SET GamePoints = GamePoints - v_cost
+   WHERE UserId = NEW.UserId;
+END;
+//
+
+-- 4.5  AFTER-INSERT on guesses → ledger line and error distance
+CREATE TRIGGER trg_GuessWallet
+AFTER INSERT ON GeoGuesses
+FOR EACH ROW
+BEGIN
+  DECLARE v_cost INT;
+  SET v_cost = CASE
+                 WHEN NEW.AttemptNumber = 1 THEN 1
+                 WHEN NEW.AttemptNumber = 2 THEN 2
+                 ELSE 3
+               END;
+
+  INSERT INTO GeoPointsTransactions(UserId, LocationId, GuessId, PointsDelta, Reason)
+  VALUES (NEW.UserId, NEW.LocationId, NEW.GuessId, -v_cost, 'guess_cost');
+
+  UPDATE GeoUsers
+     SET TotalGuessesMade = TotalGuessesMade + 1
+   WHERE UserId = NEW.UserId;
+END;
+//
+
+-- 4.6  AFTER-INSERT on guesses → calculate exact error (meters)
+CREATE TRIGGER trg_UpdateError
+AFTER INSERT ON GeoGuesses
+FOR EACH ROW
+BEGIN
+  DECLARE v_actualLat  DECIMAL(9,6);
+  DECLARE v_actualLon  DECIMAL(9,6);
+
+  SELECT Latitude, Longitude
+    INTO v_actualLat, v_actualLon
+    FROM GeoLocations
+   WHERE LocationId = NEW.LocationId;
+
+  UPDATE GeoGuesses
+     SET ErrorMeters = fn_HaversineDistance(
+                          v_actualLat, v_actualLon,
+                          NEW.Latitude, NEW.Longitude )
+   WHERE GuessId = NEW.GuessId;
+END;
+//
+DELIMITER ;
+
+-- ----------------------------------------------------------------------
+-- 5.  SANITY CHECKS (optional, remove in production)
+-- ----------------------------------------------------------------------
+-- INSERT test rows here to verify triggers if needed.
+
+-- ----------------------------------------------------------------------
+--  End of schema
+-- ----------------------------------------------------------------------
+
+
+DELETE L
+  FROM GeoUserActionLogs L
+  LEFT JOIN AspNetUsers U ON U.Id = L.UserId
+ WHERE U.Id IS NULL;
+CREATE OR REPLACE VIEW vw_UserActionLogs AS
+SELECT L.*, U.UserName, U.Email
+  FROM GeoUserActionLogs L
+  LEFT JOIN AspNetUsers U ON U.Id = L.UserId;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+cd /mnt/Files/databases/geotagger-db/
+sudo chown -R 999:999 /mnt/Files/databases/geotagger-db
+
+
+sudo docker exec -it geotagger-mysql mysql -uroot -p
+
+
+sudo docker stop geotagger-mysql
+sudo docker rm geotagger-mysql
+
+
+sudo rm -rf /mnt/Files/databases/geotagger-db/*
+sudo chown -R 999:999 /mnt/Files/databases/geotagger-db
+
+
+sudo docker run -d \
+  --name geotagger-mysql \
+  -p 3307:3306 \
+  -e MYSQL_ROOT_PASSWORD=ProductionPass1! \
+  -e MYSQL_DATABASE=geotagger \
+  -e MYSQL_USER=geotagger_user \
+  -e MYSQL_PASSWORD=ProductionPass1! \
+  -v /mnt/Files/databases/geotagger-db:/var/lib/mysql \
+  mysql:8.0
+
+
+sudo docker network create geotagger-net
