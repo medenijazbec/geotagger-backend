@@ -172,6 +172,26 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddHttpClient();
+builder.Services
+    .AddAuthentication()
+    .AddGoogle("Google", opts =>
+    {
+        opts.ClientId = builder.Configuration["Auth:Google:ClientId"]!;
+        opts.ClientSecret = builder.Configuration["Auth:Google:ClientSecret"]!;
+        opts.Scope.Add("email");
+        opts.Scope.Add("profile");
+    })
+    .AddFacebook("Facebook", opts =>
+    {
+        opts.AppId = builder.Configuration["Auth:Facebook:AppId"]!;
+        opts.AppSecret = builder.Configuration["Auth:Facebook:AppSecret"]!;
+        opts.Fields.Add("email");
+        opts.Fields.Add("name");
+    });
+
+
+
 var app = builder.Build();
 
 // 1) Enforce HTTPS + HSTS
@@ -200,7 +220,6 @@ using (var scope = app.Services.CreateScope())
 
 
 }
-
 
 
 

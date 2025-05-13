@@ -135,5 +135,20 @@ namespace geotagger_backend.Controllers
                 Message = "Password reset successful."
             });
         }
+
+        /// POST: api/Auth/external-login
+        [HttpPost("external-login")]
+        public async Task<IActionResult> ExternalLogin([FromBody] ExternalLoginDto dto)
+        {
+            var token = await _authService.ExternalLoginAsync(dto);
+            if (token == null)
+                return Unauthorized(new { Error = "External login failed." });
+
+            return Ok(new { Token = token });
+        }
+
+
+
+
     }
 }

@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using geotagger_backend.DTOs;
 using geotagger_backend.Models;
+using Google.Apis.Auth;
+using System.Text.Json;
 
 namespace geotagger_backend.Services
 {
@@ -17,15 +19,18 @@ namespace geotagger_backend.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         public AuthService(
-          UserManager<ApplicationUser> userManager,
-          SignInManager<ApplicationUser> signInManager,
-          IConfiguration configuration)
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IConfiguration configuration,
+            IHttpClientFactory httpClientFactory)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -181,5 +186,63 @@ namespace geotagger_backend.Services
             var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
             return result;
         }
+
+        public async Task<string?> ExternalLoginAsync(ExternalLoginDto dto)
+        {
+            string? email = dto.Provider.ToLower() switch
+            {
+                "google" => await ValidateGoogleAsync(dto.IdToken),
+                "facebook" => await ValidateFacebookAsync(dto.IdToken),
+                _ => null
+            };
+
+            if (email == null) return null;
+
+            // find or create local user
+            var user = await _userManager.FindByEmailAsync(email)
+                       ?? new ApplicationUser { Email = email, UserName = email };
+
+            if (string.IsNullOrEmpty(user.Id))
+            {
+                var cr = await _userManager.CreateAsync(user);
+                if (!cr.Succeeded) return null;
+            }
+
+            return await GenerateJwtToken(user);
+        }
+
+        private async Task<string?> ValidateGoogleAsync(string idToken)
+        {
+            try
+            {
+                var payload = await GoogleJsonWebSignature.ValidateAsync(idToken);
+                return payload.Email;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private async Task<string?> ValidateFacebookAsync(string accessToken)
+        {
+            var client = _httpClientFactory.CreateClient();
+            var url = $"https://graph.facebook.com/me?fields=email&access_token={accessToken}";
+            var res = await client.GetAsync(url);
+            if (!res.IsSuccessStatusCode) return null;
+
+            using var doc = JsonDocument.Parse(await res.Content.ReadAsStringAsync());
+            if (doc.RootElement.TryGetProperty("email", out var elm) &&
+                elm.ValueKind == JsonValueKind.String)
+            {
+                return elm.GetString();
+            }
+
+            return null;
+        }
+
+
+
+
     }
 }

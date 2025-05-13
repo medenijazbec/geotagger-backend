@@ -2,6 +2,7 @@
 using geotagger_backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace geotagger_backend.Controllers
 {
@@ -30,6 +31,17 @@ namespace geotagger_backend.Controllers
         {
             var list = await _svc.GetActiveLocationsAsync(page, size);
             return Ok(list);
+        }
+
+        [HttpGet("random")]
+        public async Task<IActionResult> GetRandomLocation()
+        {
+            var total = await _svc.CountActiveAsync();
+            if (total == 0) return NotFound();
+
+            var offset = Random.Shared.Next(total);
+            var dto = await _svc.GetRandomActiveAsync(offset);
+            return Ok(dto);
         }
     }
 }

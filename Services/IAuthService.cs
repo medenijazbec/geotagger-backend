@@ -9,5 +9,7 @@ namespace geotagger_backend.Services
         Task<string?> LoginAsync(LoginDto dto);
         Task<IdentityResult> ForgotPasswordAsync(ForgotPasswordDto dto);
         Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto dto);
+        Task<string?> ExternalLoginAsync(ExternalLoginDto dto);
+
     }
 }

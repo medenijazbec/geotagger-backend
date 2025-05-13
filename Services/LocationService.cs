@@ -1,8 +1,4 @@
-﻿
-// ─────────────────────────────────────────────────────────────────────────────
-// File: Services/LocationService.cs
-// ─────────────────────────────────────────────────────────────────────────────
-using System.IO;
+﻿using System.IO;
 using geotagger_backend.Data;
 using geotagger_backend.DTOs;
 using geotagger_backend.Models;
@@ -95,5 +91,25 @@ namespace geotagger_backend.Services
             }
             else gu.GamePoints += delta;
         }
+
+        public Task<int> CountActiveAsync()
+    => _db.GeoLocations.CountAsync(l => l.IsActive);
+
+        public async Task<LocationDto> GetRandomActiveAsync(int offset) =>
+            await _db.GeoLocations
+                     .Where(l => l.IsActive)
+                     .OrderBy(l => l.LocationId)
+                     .Skip(offset).Take(1)
+                     .Select(l => new LocationDto
+                     {
+                         LocationId = l.LocationId,
+                         Title = l.Title ?? string.Empty,
+                         Description = l.Description,
+                         Latitude = l.Latitude,
+                         Longitude = l.Longitude,
+                         ImageUrl = $"/locations/{Path.GetFileName(l.S3OriginalKey)}"
+                     })
+                     .SingleAsync();
+
     }
 }
