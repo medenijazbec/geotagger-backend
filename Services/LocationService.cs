@@ -73,7 +73,26 @@ namespace geotagger_backend.Services
             };
         }
 
-
+        public async Task<IEnumerable<LocationDto>> GetUserLocationsAsync(
+     string userId, int page, int pageSize)
+        {
+            return await _db.GeoLocations
+                .Where(l => l.UploaderId == userId && l.IsActive)
+                .OrderByDescending(l => l.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(l => new LocationDto
+                {
+                    LocationId = l.LocationId,
+                    Title = l.Title ?? string.Empty,
+                    Description = l.Description,
+                    Latitude = l.Latitude,
+                    Longitude = l.Longitude,
+                   
+                    ImageUrl = $"/images/{Path.GetFileName(l.S3OriginalKey)}"
+                })
+                .ToListAsync();
+        }
         public async Task<IEnumerable<LocationDto>> GetActiveLocationsAsync(int page, int pageSize)
         {
             return await _db.GeoLocations

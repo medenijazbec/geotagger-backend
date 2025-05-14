@@ -5,5 +5,6 @@ namespace geotagger_backend.Services
     public interface IGuessService
     {
         Task<GuessResultDto> MakeGuessAsync(string userId, GuessDto dto);
+        Task<IEnumerable<PersonalBestDto>> GetPersonalBestsAsync(string userId, int page, int pageSize);
     }
 }

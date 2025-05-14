@@ -59,6 +59,33 @@ namespace geotagger_backend.Services
                 RemainingPoints = wallet.GamePoints
             };
         }
+        public async Task<IEnumerable<PersonalBestDto>> GetPersonalBestsAsync(string userId, int page, int pageSize)
+        {
+            // for each location they’ve guessed, pick their best (lowest) error,
+            // then take the global top by error ascending:
+            var best = await _db.GeoGuesses
+                .Where(g => g.UserId == userId)
+                // group per location, pick min error
+                .GroupBy(g => g.LocationId)
+                .Select(grp => grp.OrderBy(g => g.ErrorMeters).First())
+                // now bring in the photo path
+                .Join(_db.GeoLocations,
+                      guess => guess.LocationId,
+                      loc => loc.LocationId,
+                      (guess, loc) => new { guess.ErrorMeters, loc.S3OriginalKey })
+                .OrderBy(x => x.ErrorMeters)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => new PersonalBestDto
+                {
+                    ErrorMeters = Math.Round(x.ErrorMeters, 1),
+                    // our static files are served from /images/{filename}
+                    ImageUrl = "/images/" + Path.GetFileName(x.S3OriginalKey)
+                })
+                .ToListAsync();
+
+            return best;
+        }
 
         private static double Haversine(decimal lat1, decimal lon1, decimal lat2, decimal lon2)
         {
@@ -71,5 +98,6 @@ namespace geotagger_backend.Services
             var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
             return R * c;
         }
+
     }
 }

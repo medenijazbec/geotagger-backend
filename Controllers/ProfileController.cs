@@ -19,17 +19,19 @@ namespace geotagger_backend.Controllers
         private readonly ApplicationDbContext _db;
         private readonly INotificationService _notifications;
         private readonly ILogger<ProfileController> _logger;
-
+        private readonly ILocationService _svc;
         public ProfileController(
             UserManager<ApplicationUser> userManager,
             ApplicationDbContext db,
             INotificationService notifications,
-            ILogger<ProfileController> logger)
+            ILogger<ProfileController> logger,
+            ILocationService svc)
         {
             _userManager = userManager;
             _db = db;
             _notifications = notifications;
             _logger = logger;
+            _svc = svc;
         }
 
         /* ------------------------------------------------------------------ */
@@ -177,5 +179,22 @@ namespace geotagger_backend.Controllers
                 totalGuesses = geo?.TotalGuessesMade ?? 0
             });
         }
+
+        /// <summary>
+        /// GET api/Profile/locations
+        /// Returns the current user's uploaded locations (paginated).
+        /// </summary>
+        // Controllers/ProfileController.cs
+
+        [HttpGet("locations")]
+        public async Task<IActionResult> GetMyLocations([FromQuery] int page = 1, [FromQuery] int size = 4)
+        {
+            var user = await CurrentUserAsync();
+            if (user == null) return Unauthorized();
+
+            var dtos = await _svc.GetUserLocationsAsync(user.Id, page, size);
+            return Ok(dtos);
+        }
+
     }
 }
