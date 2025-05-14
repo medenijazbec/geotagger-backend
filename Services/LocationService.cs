@@ -136,5 +136,44 @@ namespace geotagger_backend.Services
                 ImageUrl = $"/locations/{Path.GetFileName(l.S3OriginalKey)}"
             };
         }
+        public async Task<LocationDto> UpdateLocationAsync(int locationId, string userId, LocationUploadDto dto, string baseUrl)
+        {
+            // 1) fetch existing
+            var loc = await _db.GeoLocations.FindAsync(locationId);
+            if (loc == null || loc.UploaderId != userId)
+                throw new ArgumentException("Location not found or not owned by user.");
+
+            // 2) delete old file
+            var oldKey = loc.S3OriginalKey;                    // e.g. "images/{guid}.jpg"
+            var oldPath = Path.Combine(_env.WebRootPath, oldKey);
+            if (File.Exists(oldPath)) File.Delete(oldPath);
+
+            // 3) save new file
+            var folder = Path.Combine(_env.WebRootPath, "images");
+            Directory.CreateDirectory(folder);
+            var fname = $"{Guid.NewGuid():N}{Path.GetExtension(dto.Image.FileName)}";
+            var filepath = Path.Combine(folder, fname);
+            await using var fs = File.Create(filepath);
+            await dto.Image.CopyToAsync(fs);
+
+            // 4) update entity
+            loc.S3OriginalKey = $"images/{fname}";
+            loc.Title = dto.Title;
+            loc.Description = dto.Description;
+            loc.Latitude = Math.Round(dto.Latitude, 6);
+            loc.Longitude = Math.Round(dto.Longitude, 6);
+            await _db.SaveChangesAsync();
+
+            // 5) return updated DTO
+            return new LocationDto
+            {
+                LocationId = loc.LocationId,
+                Title = loc.Title!,
+                Description = loc.Description,
+                Latitude = loc.Latitude,
+                Longitude = loc.Longitude,
+                ImageUrl = $"{baseUrl}/images/{fname}"
+            };
+        }
     }
 }

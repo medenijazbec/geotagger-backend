@@ -11,6 +11,7 @@ namespace geotagger_backend.Services
         Task<int> CountActiveAsync();
         Task<LocationDto> GetRandomActiveAsync(int offset);
         Task<IEnumerable<LocationDto>> GetUserLocationsAsync(string userId, int page, int pageSize);
-
+        Task<LocationDto> UpdateLocationAsync(int locationId, string userId, LocationUploadDto dto, string baseUrl);
     }
 }
+
