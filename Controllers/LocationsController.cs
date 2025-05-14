@@ -19,10 +19,15 @@ namespace geotagger_backend.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Upload([FromForm] LocationUploadDto dto)
         {
-            var userId = User.FindFirst("id")?.Value;
-            if (userId == null) return Unauthorized();
-            var baseUrl = _cfg.GetValue<string>("StaticBaseUrl") ?? string.Empty;
+                  var userId = User.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
+
+            
             var loc = await _svc.UploadLocationAsync(userId, dto, baseUrl);
+
             return Ok(loc);
         }
 

@@ -7,42 +7,41 @@ using geotagger_backend.Models;
 namespace geotagger_backend.Data
 {
     /// <summary>
-    /// Connects ASP-NET Core Identity *and* the Geo-game entities to an
+    /// ASP-NET Core Identity tables + Geo-game domain tables.
     /// </summary>
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
-        // ── Geo-game tables (match mySQL schema) ─────────
-
+        // ───── DbSets ───────────────────────────────────────────────────────
         public DbSet<GeoUser> GeoUsers => Set<GeoUser>();
         public DbSet<GeoLocation> GeoLocations => Set<GeoLocation>();
         public DbSet<GeoGuess> GeoGuesses => Set<GeoGuess>();
         public DbSet<GeoPointsTransaction> GeoPointsTransactions => Set<GeoPointsTransaction>();
         public DbSet<GeoUserActionLog> GeoUserActionLogs => Set<GeoUserActionLog>();
-
         public DbSet<Notification> Notifications => Set<Notification>();
 
-        // ── Fluent mappings (only relationships; no schema tweaking) ─────────
+        // ───── Fluent mappings (only relationships / column types) ─────────
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // GeoUser Identity one-to-one
+            /* GeoUser 1-to-1 Identity */
             builder.Entity<GeoUser>()
-                   .HasOne<ApplicationUser>()
+                   .HasOne(g => g.Identity)
                    .WithOne()
                    .HasForeignKey<GeoUser>(g => g.UserId)
+                   .HasPrincipalKey<ApplicationUser>(u => u.Id)
                    .OnDelete(DeleteBehavior.Cascade);
 
-            // GeoLocation GeoUser
+            /* GeoLocation ←→ GeoUser */
             builder.Entity<GeoLocation>()
                    .HasOne(l => l.Uploader)
                    .WithMany(u => u.Locations)
                    .HasForeignKey(l => l.UploaderId);
 
-            // GeoGuess GeoLocation & GeoUser
+            /* GeoGuess relationships */
             builder.Entity<GeoGuess>()
                    .HasOne(g => g.Location)
                    .WithMany(l => l.Guesses)
@@ -52,6 +51,19 @@ namespace geotagger_backend.Data
                    .HasOne(g => g.User)
                    .WithMany(u => u.Guesses)
                    .HasForeignKey(g => g.UserId);
+
+            /* FULL-PRECISION coordinates  (±90 / ±180 with 8-dp) */
+            builder.Entity<GeoLocation>(e =>
+            {
+                // EF Core ≥ 5 : prefer HasPrecision; fallback to HasColumnType
+#if NET5_0_OR_GREATER
+                e.Property(p => p.Latitude).HasPrecision(10, 8);
+                e.Property(p => p.Longitude).HasPrecision(11, 8);
+#else
+                e.Property(p => p.Latitude)  .HasColumnType("decimal(10,8)");
+                e.Property(p => p.Longitude) .HasColumnType("decimal(11,8)");
+#endif
+            });
         }
     }
 }

@@ -24,7 +24,7 @@ namespace geotagger_backend.Services
             if (wallet == null || wallet.GamePoints < cost)
                 throw new InvalidOperationException("Insufficient game points.");
 
-            double error = Haversine(location.Latitude, location.Longitude, dto.Latitude, dto.Longitude);
+            double error = Haversine((decimal)location.Latitude, (decimal)location.Longitude, dto.Latitude, dto.Longitude);
 
             var guess = new GeoGuess
             {

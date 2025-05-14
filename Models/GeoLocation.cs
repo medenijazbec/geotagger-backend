@@ -17,8 +17,8 @@ namespace geotagger_backend.Models
 
         [MaxLength(255)] public string? Title { get; set; }
         public string? Description { get; set; }
-        [Range(-90, 90)] public decimal Latitude { get; set; }
-        [Range(-180, 180)] public decimal Longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
 

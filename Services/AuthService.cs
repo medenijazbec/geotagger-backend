@@ -11,6 +11,7 @@ using geotagger_backend.DTOs;
 using geotagger_backend.Models;
 using Google.Apis.Auth;
 using System.Text.Json;
+using geotagger_backend.Data;
 
 namespace geotagger_backend.Services
 {
@@ -20,17 +21,20 @@ namespace geotagger_backend.Services
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ApplicationDbContext _db;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            ApplicationDbContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _httpClientFactory = httpClientFactory;
+            _db = db;
         }
 
         /// <summary>
@@ -61,7 +65,13 @@ namespace geotagger_backend.Services
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
+            if (result.Succeeded)
+            {
+                _db.GeoUsers.Add(new GeoUser { UserId = user.Id });   // initial 10 pts via trg_InitUser
+                await _db.SaveChangesAsync();
+            }
             return result;
+
         }
         /// <summary>
         /// Attempts to sign in a user with the provided credentials and returns a JWT on success.

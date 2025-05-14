@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.FileProviders;
 using System;
 using geotagger_backend.Middleware;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -203,7 +204,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-
+var culture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 //Seed the “Admin” role if it doesnst exist
 using (var scope = app.Services.CreateScope())
