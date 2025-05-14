@@ -173,6 +173,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddHttpClient();
+/*
 builder.Services
     .AddAuthentication()
     .AddGoogle("Google", opts =>
@@ -189,7 +190,7 @@ builder.Services
         opts.Fields.Add("email");
         opts.Fields.Add("name");
     });
-
+*/
 
 
 var app = builder.Build();
@@ -224,9 +225,9 @@ using (var scope = app.Services.CreateScope())
 
 
 
-//app.UseCors("AllowAll");
 
-app.UseCors("FrontendPolicy");
+
+//app.UseCors("FrontendPolicy");
 
 //serve wwwroot/images at /images/*
 app.UseStaticFiles(new StaticFileOptions
@@ -270,6 +271,8 @@ app.UseStaticFiles(new StaticFileOptions
 
 
 app.UseRouting();
+
+app.UseCors("AllowAll");
 
 // after app.UseRouting();
 app.UseMiddleware<ActionLoggingMiddleware>();

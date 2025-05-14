@@ -2,6 +2,7 @@
 using geotagger_backend.DTOs;
 using geotagger_backend.Models;
 using geotagger_backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +33,7 @@ namespace geotagger_backend.Controllers
         /// </returns>
         // POST: api/Auth/register
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
             if (!ModelState.IsValid)
