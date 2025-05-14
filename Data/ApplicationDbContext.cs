@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using geotagger_backend.Models;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace geotagger_backend.Data
 {
@@ -26,6 +27,13 @@ namespace geotagger_backend.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<GeoPointsTransaction>(entity =>
+            {
+                entity.Property(e => e.Reason)
+                      .HasConversion(new EnumToStringConverter<PointsReason>())
+                  
+                      .HasColumnType("enum('registration_bonus','upload_reward','guess_cost')");
+            });
 
             /* GeoUser 1-to-1 Identity */
             builder.Entity<GeoUser>()

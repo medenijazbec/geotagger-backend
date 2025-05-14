@@ -46,16 +46,6 @@ namespace geotagger_backend.Services
         /// </returns>
         public async Task<IdentityResult> RegisterAsync(RegisterDto dto)
         {
-            if (dto.Password != dto.ConfirmPassword)
-            {
-                var error = new IdentityError
-                {
-                    Code = "PasswordMismatch",
-                    Description = "Passwords do not match."
-                };
-                return IdentityResult.Failed(error);
-            }
-
             var user = new ApplicationUser
             {
                 FirstName = dto.Name,
@@ -65,14 +55,23 @@ namespace geotagger_backend.Services
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                _db.GeoUsers.Add(new GeoUser { UserId = user.Id });   // initial 10 pts via trg_InitUser
-                await _db.SaveChangesAsync();
+               
+                return result;
             }
-            return result;
 
+
+            _db.GeoUsers.Add(new GeoUser { UserId = user.Id });
+
+          
+            await _db.SaveChangesAsync();
+
+            return result;
         }
+
+
+
         /// <summary>
         /// Attempts to sign in a user with the provided credentials and returns a JWT on success.
         /// </summary>

@@ -107,11 +107,28 @@ namespace geotagger_backend.Services
                     Description = l.Description,
                     Latitude = l.Latitude,
                     Longitude = l.Longitude,
-                    ImageUrl = $"/locations/{Path.GetFileName(l.S3OriginalKey)}"
+                    // S3OriginalKey already starts with "images/…"
+                    // Prefix with a slash so React can request /images/<file>
+                    ImageUrl = $"/{l.S3OriginalKey}"
                 })
                 .ToListAsync();
         }
+        public async Task<LocationDto?> GetByIdAsync(int id)
+        {
+            var l = await _db.GeoLocations
+                             .AsNoTracking()
+                             .FirstOrDefaultAsync(x => x.LocationId == id && x.IsActive);
 
+            return l == null ? null : new LocationDto
+            {
+                LocationId = l.LocationId,
+                Title = l.Title ?? string.Empty,
+                Description = l.Description,
+                Latitude = l.Latitude,
+                Longitude = l.Longitude,
+                ImageUrl = $"/{l.S3OriginalKey}"
+            };
+        }
         public Task<int> CountActiveAsync()
             => _db.GeoLocations.CountAsync(l => l.IsActive);
 

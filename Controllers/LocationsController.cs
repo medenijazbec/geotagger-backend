@@ -3,7 +3,6 @@ using geotagger_backend.DTOs;
 using geotagger_backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace geotagger_backend.Controllers
 {
@@ -14,35 +13,67 @@ namespace geotagger_backend.Controllers
         private readonly ILocationService _svc;
         private readonly IConfiguration _cfg;
         private readonly ApplicationDbContext _db;
-        public LocationsController(ILocationService svc, IConfiguration cfg, ApplicationDbContext db) 
-        { _svc = svc; 
-          _cfg = cfg;
+
+        public LocationsController(
+            ILocationService svc,
+            IConfiguration cfg,
+            ApplicationDbContext db)
+        {
+            _svc = svc;
+            _cfg = cfg;
             _db = db;
         }
+
+        /* ──────────────────────────────────────────────────────────────── */
+        /* 0.  UPLOAD                                                      */
+        /* ──────────────────────────────────────────────────────────────── */
 
         [HttpPost]
         [Authorize]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Upload([FromForm] LocationUploadDto dto)
         {
-                  var userId = User.FindFirst("id")?.Value;
+            var userId = User.FindFirst("id")?.Value;
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
             var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
-
-            
             var loc = await _svc.UploadLocationAsync(userId, dto, baseUrl);
 
             return Ok(loc);
         }
 
+        /* ──────────────────────────────────────────────────────────────── */
+        /* 1.  PAGED BROWSE – accepts both size= and pageSize=             */
+        /* ──────────────────────────────────────────────────────────────── */
+
         [HttpGet]
-        public async Task<IActionResult> Browse([FromQuery] int page = 1, [FromQuery] int size = 20)
+        public async Task<IActionResult> Browse(
+            [FromQuery] int page = 1,
+            [FromQuery] int? size = null,                                         // legacy param
+            [FromQuery(Name = "pageSize")] int? pageSize = null)                       // new param (React)
         {
-            var list = await _svc.GetActiveLocationsAsync(page, size);
+            var take = pageSize ?? size ?? 20;
+            if (take <= 0) take = 20;
+
+            var list = await _svc.GetActiveLocationsAsync(page, take);
             return Ok(list);
         }
+
+        /* ──────────────────────────────────────────────────────────────── */
+        /* 2.  SINGLE LOCATION  – used on the guess page                   */
+        /* ──────────────────────────────────────────────────────────────── */
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var dto = await _svc.GetByIdAsync(id);
+            return dto == null ? NotFound() : Ok(dto);
+        }
+
+        /* ──────────────────────────────────────────────────────────────── */
+        /* 3.  RANDOM LOCATION                                             */
+        /* ──────────────────────────────────────────────────────────────── */
 
         [HttpGet("random")]
         public async Task<IActionResult> GetRandomLocation()
@@ -52,17 +83,26 @@ namespace geotagger_backend.Controllers
 
             var offset = Random.Shared.Next(total);
             var dto = await _svc.GetRandomActiveAsync(offset);
+
             return Ok(dto);
         }
-        [HttpPut("{id}")]
+
+        /* ──────────────────────────────────────────────────────────────── */
+        /* 4.  UPDATE (multipart/form-data)                                */
+        /* ──────────────────────────────────────────────────────────────── */
+
+        [HttpPut("{id:int}")]
         [Authorize]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UpdateLocation([FromRoute] int id, [FromForm] LocationUploadDto dto)
+        public async Task<IActionResult> UpdateLocation(
+            int id,
+            [FromForm] LocationUploadDto dto)
         {
             var userId = User.FindFirst("id")?.Value;
             if (userId == null) return Unauthorized();
 
             var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
+
             try
             {
                 var updated = await _svc.UpdateLocationAsync(id, userId, dto, baseUrl);
@@ -74,36 +114,38 @@ namespace geotagger_backend.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        /* ──────────────────────────────────────────────────────────────── */
+        /* 5.  DELETE (soft-delete by default)                             */
+        /* ──────────────────────────────────────────────────────────────── */
+
+        [HttpDelete("{id:int}")]
         [Authorize]
-        public async Task<IActionResult> DeleteLocation([FromRoute] int id)
+        public async Task<IActionResult> DeleteLocation(int id)
         {
-            // 1. make sure the user is authenticated
+            /* 1. ensure user is authenticated */
             var userId = User.FindFirst("id")?.Value;
             if (userId == null)
                 return Unauthorized();
 
-            // 2. fetch the location
+            /* 2. fetch the location */
             var loc = await _db.GeoLocations.FindAsync(id);
             if (loc == null)
                 return NotFound();
 
-            // 3. ensure they own it
+            /* 3. verify ownership */
             if (loc.UploaderId != userId)
                 return Forbid();
 
-            // 4a. if you want to soft‐delete:
+            /* 4. soft-delete (set inactive) */
             loc.IsActive = false;
 
-            // 4b. or to hard‐delete:
+            //  ─ OR ─   hard-delete:
             // _db.GeoLocations.Remove(loc);
 
             await _db.SaveChangesAsync();
 
-            // 5. 204 No Content on success
+            /* 5. HTTP 204 No Content */
             return NoContent();
         }
-
-
     }
 }

@@ -38,6 +38,22 @@ namespace geotagger_backend.Controllers
             var list = await _svc.GetPersonalBestsAsync(userId, page, pageSize);
             return Ok(list);
         }
+        [AllowAnonymous]
+        [HttpGet("leaderboard")]
+        public async Task<IActionResult> GetLeaderboard(
+           [FromQuery] int locationId,
+           [FromQuery] int page = 1,
+           [FromQuery] int pageSize = 20)
+        {
+            // prevent any caching of this endpoint
+            Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, proxy-revalidate";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
+
+            var list = await _svc.GetLeaderboardAsync(locationId, page, pageSize);
+            return Ok(list);
+        }
+
 
     }
 }
