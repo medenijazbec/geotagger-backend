@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\services\\guessservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:services\\guessservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\dtos\\personalbestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:dtos\\personalbestdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\services\\iguessservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:services\\iguessservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\services\\guessservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|solutionrelative:services\\guessservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8C1563E8-ECA6-4007-A3BA-1FA393E931FC}|geotagger-backend.csproj|c:\\users\\matic\\desktop\\geotagger\\geotagger-backend\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -209,7 +209,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
@@ -221,8 +221,7 @@
               "RelativeToolTip": "DTOs\\UserGuessDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-15T14:42:45.025Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-15T14:42:45.025Z"
             },
             {
               "$type": "Document",
@@ -234,18 +233,17 @@
               "RelativeToolTip": "Services\\IAuthService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwAcAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:26.453Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:26.453Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "GuessService.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\GuessService.cs",
               "RelativeDocumentMoniker": "Services\\GuessService.cs",
               "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\GuessService.cs",
               "RelativeToolTip": "Services\\GuessService.cs",
-              "ViewState": "AgIAAHcAAAAAAAAAAAAiwNMAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAowEwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-13T16:15:28.85Z",
               "EditorCaption": ""
@@ -260,8 +258,7 @@
               "RelativeToolTip": "Controllers\\LocationsController.cs",
               "ViewState": "AgIAAC8AAAAAAAAAAAAuwJcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:16:39.039Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T16:16:39.039Z"
             },
             {
               "$type": "Document",
@@ -277,7 +274,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "PersonalBestDto.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\DTOs\\PersonalBestDto.cs",
               "RelativeDocumentMoniker": "DTOs\\PersonalBestDto.cs",
@@ -298,12 +295,11 @@
               "RelativeToolTip": "Controllers\\GuessController.cs",
               "ViewState": "AgIAABEAAAAAAAAAAAA3wCAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:16:55.291Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T16:16:55.291Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "IGuessService.cs",
               "DocumentMoniker": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\IGuessService.cs",
               "RelativeDocumentMoniker": "Services\\IGuessService.cs",
@@ -311,8 +307,7 @@
               "RelativeToolTip": "Services\\IGuessService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:15:12.788Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T16:15:12.788Z"
             },
             {
               "$type": "Document",
@@ -324,8 +319,7 @@
               "RelativeToolTip": "Services\\ILocationService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwA4AAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:14:52.926Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T16:14:52.926Z"
             },
             {
               "$type": "Document",
@@ -337,8 +331,7 @@
               "RelativeToolTip": "Services\\AuthService.cs",
               "ViewState": "AgIAACsAAAAAAAAAAAAmwEUAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:19.778Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:19.778Z"
             },
             {
               "$type": "Document",
@@ -386,8 +379,7 @@
               "RelativeToolTip": "Data\\ApplicationDbContext.cs",
               "ViewState": "AgIAAAwAAAAAAAAAAAA5wCEAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:17.524Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T15:58:17.524Z"
             },
             {
               "$type": "Document",
