@@ -73,32 +73,67 @@ namespace geotagger_backend.Services
             };
         }
 
+
+        /*anti-join/NOT EXISTS pattern makes sure i only take the best guess for each location for the user (lowest error earliest if tie).
+        */
         public async Task<IEnumerable<PersonalBestDto>> GetPersonalBestsAsync(string userId, int page, int pageSize)
         {
+            // All guesses for this user
+            var guesses = _db.GeoGuesses.Where(g => g.UserId == userId);
 
-            var best = await _db.GeoGuesses
+            // For each guess, include only if it is the best (lowest error, earliest tie-break) for that location
+            var bestGuesses =
+                from guess in guesses
+                where !guesses.Any(other =>
+                    other.LocationId == guess.LocationId &&
+                    //someone else's guess is better for the same location
+                    (other.ErrorMeters < guess.ErrorMeters ||
+                     (other.ErrorMeters == guess.ErrorMeters && other.CreatedAt < guess.CreatedAt))
+                )
+                join loc in _db.GeoLocations on guess.LocationId equals loc.LocationId
+                orderby guess.ErrorMeters, guess.CreatedAt
+                select new PersonalBestDto
+                {
+                    LocationId = guess.LocationId,
+                    ErrorMeters = Math.Round(guess.ErrorMeters, 1),
+                    ImageUrl = "/images/" + System.IO.Path.GetFileName(loc.S3OriginalKey)
+                };
+
+            return await bestGuesses
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+
+
+
+        public async Task<List<UserGuessDto>> GetAllGuessesAsync(string userId, int page, int pageSize)
+        {
+            var guesses = await _db.GeoGuesses
                 .Where(g => g.UserId == userId)
-              
-                .GroupBy(g => g.LocationId)
-                .Select(grp => grp.OrderBy(g => g.ErrorMeters).First())
-               
+                .OrderByDescending(g => g.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .Join(_db.GeoLocations,
                       guess => guess.LocationId,
                       loc => loc.LocationId,
-                      (guess, loc) => new { guess.ErrorMeters, loc.S3OriginalKey })
-                .OrderBy(x => x.ErrorMeters)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Select(x => new PersonalBestDto
-                {
-                    ErrorMeters = Math.Round(x.ErrorMeters, 1),
-                    //static files are served from /images/{filename}
-                    ImageUrl = "/images/" + Path.GetFileName(x.S3OriginalKey)
-                })
+                      (guess, loc) => new UserGuessDto
+                      {
+                          LocationId = guess.LocationId,
+                          ErrorMeters = Math.Round(guess.ErrorMeters, 1),
+                          ImageUrl = "/images/" + System.IO.Path.GetFileName(loc.S3OriginalKey)
+                      })
                 .ToListAsync();
 
-            return best;
+            return guesses;
         }
+
+
+
+
+
+
         /*public async Task<IEnumerable<LeaderboardEntryDto>> GetLeaderboardAsync(int locationId, int page, int pageSize)
         {
             // take each user's BEST guess for that location,

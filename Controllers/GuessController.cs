@@ -1,4 +1,5 @@
-﻿using geotagger_backend.DTOs;
+﻿using System.Security.Claims;
+using geotagger_backend.DTOs;
 using geotagger_backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,14 +31,15 @@ namespace geotagger_backend.Controllers
             }
         }
         [HttpGet("personal-best")]
-        public async Task<IActionResult> GetPersonalBest([FromQuery] int page = 1, [FromQuery] int pageSize = 4)
+        public async Task<IActionResult> GetPersonalBest([FromQuery] int page = 1, [FromQuery] int pageSize = 3)
         {
-            var userId = User.FindFirst("id")?.Value;
+            var userId = User.FindFirst("id")?.Value ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null) return Unauthorized();
 
             var list = await _svc.GetPersonalBestsAsync(userId, page, pageSize);
             return Ok(list);
         }
+
         [AllowAnonymous]
         [HttpGet("leaderboard")]
         public async Task<IActionResult> GetLeaderboard(
@@ -53,6 +55,17 @@ namespace geotagger_backend.Controllers
             var list = await _svc.GetLeaderboardAsync(locationId, page, pageSize);
             return Ok(list);
         }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllGuesses([FromQuery] int page = 1, [FromQuery] int pageSize = 9)
+        {
+            var userId = User.FindFirst("id")?.Value;
+            if (userId == null) return Unauthorized();
+
+            var guesses = await _svc.GetAllGuessesAsync(userId, page, pageSize);
+            return Ok(guesses);
+        }
+
 
 
     }
