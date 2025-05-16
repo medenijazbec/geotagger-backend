@@ -180,7 +180,7 @@ namespace geotagger_backend.Controllers
 
         [HttpGet("ExternalLoginCallback")]
         public async Task<IActionResult> ExternalLoginCallback(
-        string? returnUrl = null, string? remoteError = null)
+    string? returnUrl = null, string? remoteError = null)
         {
             if (remoteError != null)
                 return Redirect($"{_frontendBaseUrl}/signin?externalLogin=error&message={Uri.EscapeDataString(remoteError)}");
@@ -189,8 +189,9 @@ namespace geotagger_backend.Controllers
             if (info == null)
                 return Redirect($"{_frontendBaseUrl}/signin?externalLogin=error&message=No external login info.");
 
-            /* ── BASIC CLAIMS ────────────────────────────────────────── */
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email) ?? info.Principal.FindFirstValue("email");
+            /* ── BASIC CLAIMS ─────────────────────────────────────────────── */
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                         ?? info.Principal.FindFirstValue("email");
             var givenName = info.Principal.FindFirstValue(ClaimTypes.GivenName) ?? string.Empty;
             var familyName = info.Principal.FindFirstValue(ClaimTypes.Surname) ?? string.Empty;
             var fullName = info.Principal.Identity?.Name ?? string.Empty;
@@ -199,24 +200,25 @@ namespace geotagger_backend.Controllers
             if (string.IsNullOrWhiteSpace(email))
                 return Redirect($"{_frontendBaseUrl}/signin?externalLogin=error&message=No email from provider.");
 
-            /* ── DERIVE SAFE FALL-BACKS ─────────────────────────────── */
-            var first = !string.IsNullOrWhiteSpace(givenName) ? givenName
-                      : fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()
-                      ?? "GoogleUser";
+            /* ── SAFE FALL-BACKS ──────────────────────────────────────────── */
+            var first = !string.IsNullOrWhiteSpace(givenName)
+                        ? givenName
+                        : fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()
+                        ?? "GoogleUser";
 
             var last = !string.IsNullOrWhiteSpace(familyName)
-                      ? familyName
-                      : fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).LastOrDefault()
-                      ?? "User";
+                        ? familyName
+                        : fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).LastOrDefault()
+                        ?? "User";
 
             if (string.IsNullOrWhiteSpace(avatarUrl))
-                avatarUrl = "/images/default_avatar.png";       // your own placeholder
+                avatarUrl = "/images/default_avatar.png";
 
             var displayName = info.ProviderDisplayName ?? info.LoginProvider ?? "External";
 
-            /* ── TRY SIGN-IN BY EXTERNAL LOGIN KEY ─────────────────── */
+            /* ── TRY SIGN-IN BY EXTERNAL LOGIN KEY ────────────────────────── */
             var signIn = await _signInManager.ExternalLoginSignInAsync(
-                            info.LoginProvider, info.ProviderKey, false);
+                             info.LoginProvider, info.ProviderKey, false);
 
             ApplicationUser user;
 
@@ -229,7 +231,7 @@ namespace geotagger_backend.Controllers
             }
             else
             {
-                /* ── FIRST-TIME WITH THIS PROVIDER ──────────────────── */
+                /* ── FIRST-TIME WITH THIS PROVIDER ─────────────────────────── */
                 user = await _userManager.FindByEmailAsync(email);
 
                 if (user == null)
@@ -244,12 +246,10 @@ namespace geotagger_backend.Controllers
                         FirstName = first,
                         LastName = last,
                         ProfilePictureUrl = avatarUrl,
-                        /* fake password so PasswordHash is never NULL        */
+                        // dummy password so PasswordHash is never null
                         PasswordHash = Convert.ToHexString(RandomNumberGenerator.GetBytes(64))
                     };
                     await _userManager.CreateAsync(user);
-                    _db.GeoUsers.Add(new GeoUser { UserId = user.Id });  // initial points row
-                    await _db.SaveChangesAsync();
                 }
                 else
                 {
@@ -261,9 +261,49 @@ namespace geotagger_backend.Controllers
                 await _userManager.AddLoginAsync(user, loginInfo);
             }
 
+            /* ── ENSURE WALLET ROW + 100-POINT BONUS ──────────────────────── */
+            await EnsureGeoUserAsync(user.Id);
+
+            /* ── ISSUE JWT AND REDIRECT BACK TO FRONTEND ──────────────────── */
             var jwt = await _authService.GenerateJwtForUserAsync(user);
             return Redirect($"{_frontendBaseUrl}/home?externalLogin=success&token={Uri.EscapeDataString(jwt)}");
         }
+
+        private async Task EnsureGeoUserAsync(string userId)
+        {
+            var geo = await _db.GeoUsers.FindAsync(userId);
+
+            if (geo == null)                           // first ever OAuth login
+            {
+                geo = new GeoUser
+                {
+                    UserId = userId,
+                    GamePoints = 100
+                };
+                _db.GeoUsers.Add(geo);
+
+                _db.GeoPointsTransactions.Add(new GeoPointsTransaction
+                {
+                    UserId = userId,
+                    PointsDelta = 100,
+                    Reason = PointsReason.registration_bonus
+                });
+            }
+            else if (geo.GamePoints == 0)              // legacy rows with 0 pts
+            {
+                geo.GamePoints = 100;
+
+                _db.GeoPointsTransactions.Add(new GeoPointsTransaction
+                {
+                    UserId = userId,
+                    PointsDelta = 100,
+                    Reason = PointsReason.registration_bonus
+                });
+            }
+
+            await _db.SaveChangesAsync();
+        }
+
 
         private async Task PatchProviderDisplayNameAsync(
         ApplicationUser user, ExternalLoginInfo info, string displayName)

@@ -13,6 +13,7 @@ using Google.Apis.Auth;
 using System.Text.Json;
 using geotagger_backend.Data;
 using static Org.BouncyCastle.Math.EC.ECCurve;
+using geotagger_backend.Helpers;
 
 namespace geotagger_backend.Services
 {
@@ -129,7 +130,8 @@ namespace geotagger_backend.Services
         new Claim(ClaimTypes.NameIdentifier, user.Id),
         new Claim("id", user.Id)
       };
-
+            var isExternal = await _userManager.IsExternalAsync(user);
+            claims.Add(new Claim("external", isExternal ? "1" : "0"));
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
@@ -144,6 +146,9 @@ namespace geotagger_backend.Services
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256)
               });
+
+
+
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -300,9 +305,10 @@ namespace geotagger_backend.Services
 
             return null;
         }
+        // Services/AuthService.cs
         public async Task<string> GenerateJwtForUserAsync(ApplicationUser user)
         {
-            // Prefer env vars, fallback to appsettings.json
+            /* ── 1.  load JWT settings (env-vars win over appsettings.json) ───────── */
             var jwtKey = _config["JWT__KEY"] ?? _config["Jwt:Key"];
             var jwtIssuer = _config["JWT__ISSUER"] ?? _config["Jwt:Issuer"];
             var jwtAudience = _config["JWT__AUDIENCE"] ?? _config["Jwt:Audience"];
@@ -313,18 +319,30 @@ namespace geotagger_backend.Services
                 string.IsNullOrWhiteSpace(jwtAudience))
                 throw new InvalidOperationException("Missing JWT configuration values.");
 
+            /* ── 2.  build the claim set ──────────────────────────────────────────── */
             var claims = new List<Claim>
     {
-        new Claim(JwtRegisteredClaimNames.Sub,  user.Id),
-        new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
-        new Claim(JwtRegisteredClaimNames.Jti,  Guid.NewGuid().ToString()),
+        // keep Sub on the e-mail so the front-end’s “sub” debug logging is unchanged
+        new Claim(JwtRegisteredClaimNames.Sub,    user.Email ?? string.Empty),
+
+        new Claim(JwtRegisteredClaimNames.Jti,    Guid.NewGuid().ToString()),
+        new Claim(JwtRegisteredClaimNames.Email,  user.Email ?? string.Empty),
+
+        // ─ added: what all controllers use to identify the caller ─
+        new Claim(ClaimTypes.NameIdentifier, user.Id),
+        new Claim("id",                       user.Id),
+
         new Claim("firstName", user.FirstName ?? string.Empty),
-        new Claim("lastName",  user.LastName  ?? string.Empty)
+        new Claim("lastName",  user.LastName  ?? string.Empty),
+
+        // let the UI / policy logic still distinguish external accounts
+        new Claim("external", "1")
     };
 
             foreach (var role in await _userManager.GetRolesAsync(user))
                 claims.Add(new Claim(ClaimTypes.Role, role));
 
+            /* ── 3.  mint and return the token ────────────────────────────────────── */
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.UtcNow.AddMinutes(int.TryParse(expiresStr, out var m) ? m : 60);
@@ -335,10 +353,48 @@ namespace geotagger_backend.Services
                 claims: claims,
                 expires: expires,
                 signingCredentials: creds);
-
+            await EnsureGeoUserAsync(user.Id);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+
+
+        public async Task EnsureGeoUserAsync(string userId)
+        {
+            var geo = await _db.GeoUsers.FindAsync(userId);
+
+            /* first-time OAuth login → insert wallet row + bonus --------------- */
+            if (geo == null)
+            {
+                geo = new GeoUser                // initial 100 pts
+                {
+                    UserId = userId,
+                    GamePoints = 100
+                };
+                _db.GeoUsers.Add(geo);
+
+                _db.GeoPointsTransactions.Add(new GeoPointsTransaction
+                {
+                    UserId = userId,
+                    PointsDelta = 100,
+                    Reason = PointsReason.registration_bonus
+                });
+            }
+            /* early bug left some rows with 0 pts – patch them on the fly ------ */
+            else if (geo.GamePoints == 0)
+            {
+                geo.GamePoints = 100;
+
+                _db.GeoPointsTransactions.Add(new GeoPointsTransaction
+                {
+                    UserId = userId,
+                    PointsDelta = 100,
+                    Reason = PointsReason.registration_bonus
+                });
+            }
+
+            await _db.SaveChangesAsync();
+        }
 
 
 

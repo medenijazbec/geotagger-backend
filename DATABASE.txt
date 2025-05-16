@@ -555,6 +555,8 @@ WHERE g.UserId = 'e212a426-e8a1-46fd-bb50-ed5cd04df72e'
 ORDER BY g.CreatedAt DESC
 LIMIT 0, 10;
 
+
+
 SELECT * FROM AspNetRoleClaims;
 SELECT * FROM AspNetRoles;
 SELECT * FROM AspNetUserClaims;
@@ -571,6 +573,35 @@ SELECT * FROM GeoPointsTransactions;
 SELECT * FROM GeoRefreshTokens;
 SELECT * FROM GeoUserActionTypes;
 SELECT * FROM GeoUsers;
+
+
+-- ── kill the old game-wallet triggers ─────────────────────────────────
+DROP TRIGGER IF EXISTS trg_InitUser;
+DROP TRIGGER IF EXISTS trg_GeoPointsBalance;
+DROP TRIGGER IF EXISTS trg_LocationReward;
+DROP TRIGGER IF EXISTS trg_GuessAttempt;
+DROP TRIGGER IF EXISTS trg_GuessWallet;
+DROP TRIGGER IF EXISTS trg_UpdateError;
+
+
+
+-- 1. change the default that EF uses when it inserts the row
+ALTER TABLE GeoUsers
+  MODIFY GamePoints INT NOT NULL DEFAULT 100;
+
+-- 2. update the AFTER-INSERT trigger so the ledger shows +100
+DROP TRIGGER IF EXISTS trg_InitUser;
+
+CREATE TRIGGER trg_InitUser
+AFTER INSERT ON GeoUsers
+FOR EACH ROW
+  INSERT INTO GeoPointsTransactions(UserId, PointsDelta, Reason)
+  VALUES (NEW.UserId, 100, 'registration_bonus');
+
+INSERT INTO GeoPointsTransactions (UserId, PointsDelta, Reason)
+SELECT UserId, 90, 'registration_bonus' FROM GeoUsers;
+
+UPDATE GeoUsers SET GamePoints = GamePoints + 90;
 
 
 
