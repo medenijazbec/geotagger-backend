@@ -243,7 +243,7 @@
               "RelativeDocumentMoniker": "Services\\GuessService.cs",
               "ToolTip": "C:\\Users\\Matic\\Desktop\\geotagger\\geotagger-backend\\Services\\GuessService.cs",
               "RelativeToolTip": "Services\\GuessService.cs",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAowEwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-13T16:15:28.85Z",
               "EditorCaption": ""
@@ -282,8 +282,7 @@
               "RelativeToolTip": "DTOs\\PersonalBestDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-14T19:07:17.746Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-14T19:07:17.746Z"
             },
             {
               "$type": "Document",

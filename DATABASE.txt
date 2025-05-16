@@ -455,6 +455,9 @@ SELECT L.*, U.UserName, U.Email
   LEFT JOIN AspNetUsers U ON U.Id = L.UserId;
 
 
+ALTER TABLE `GeoLocations`
+  MODIFY `Latitude`  DECIMAL(10,8) NOT NULL,
+  MODIFY `Longitude` DECIMAL(11,8) NOT NULL;
 
 
 
@@ -462,9 +465,100 @@ SELECT L.*, U.UserName, U.Email
 
 
 
+SELECT
+  l.LocationId,
+  l.Title,
+  l.Description,
+  l.Latitude,
+  l.Longitude,
+  l.S3OriginalKey    AS ImageKey,
+  l.CreatedAt
+FROM GeoLocations AS l
+JOIN AspNetUsers AS u
+  ON l.UploaderId = u.Id
+WHERE u.Email = 'matic.ozimic@gmail.com';
+
+
+DROP TRIGGER IF EXISTS trg_InitUser;
+
+CREATE TRIGGER trg_InitUser
+AFTER INSERT ON GeoUsers
+FOR EACH ROW
+  INSERT INTO GeoPointsTransactions(UserId, PointsDelta, Reason)
+  VALUES (NEW.UserId, 10, 'registration_bonus');
+
+
+-- 1) Insert a +1000-point transaction for every user
+INSERT INTO GeoPointsTransactions (UserId, PointsDelta, Reason)
+SELECT
+  UserId,
+  1000,
+  'upload_reward'      -- reuse the upload_reward bucket for this admin bonus
+FROM GeoUsers;
+
+-- 2) Bump each user’s wallet by 1000
+UPDATE GeoUsers
+SET GamePoints = GamePoints + 1000;
+SELECT
+  g.GuessId,
+  g.LocationId,
+  l.Title              AS LocationTitle,
+  CONCAT('/images/', SUBSTRING_INDEX(l.S3OriginalKey, '/', -1)) AS ImageUrl,
+  g.Latitude           AS GuessLatitude,
+  g.Longitude          AS GuessLongitude,
+  g.ErrorMeters,
+  g.AttemptNumber,
+  g.CreatedAt          AS GuessedAt
+FROM GeoGuesses AS g
+JOIN AspNetUsers AS u
+  ON g.UserId = u.Id
+JOIN GeoLocations AS l
+  ON g.LocationId = l.LocationId
+WHERE u.Email = 'afsafasfas@gmail.com'
+ORDER BY g.CreatedAt DESC;
+
+
+SELECT
+  u.UserName,
+  u.ProfilePictureUrl,
+  g.UserId,
+  g.LocationId,
+  g.ErrorMeters      AS BestErrorMeters,
+  g.CreatedAt        AS BestGuessAt
+FROM (
+  SELECT
+    *,
+    ROW_NUMBER() OVER (
+      PARTITION BY UserId
+      ORDER BY ErrorMeters ASC, CreatedAt ASC
+    ) AS rn
+  FROM GeoGuesses
+  WHERE LocationId = 6
+) g
+JOIN AspNetUsers u
+  ON g.UserId = u.Id
+WHERE g.rn = 1
+ORDER BY g.ErrorMeters ASC, g.CreatedAt ASC
+LIMIT 0, 1000;
+
+
+
+SELECT Id FROM AspNetUsers WHERE Email = 'podganyak@gmail.com';
+
+SELECT
+    g.LocationId,
+    ROUND(g.ErrorMeters, 1) AS ErrorMeters,
+    CONCAT('/images/', SUBSTRING_INDEX(l.S3OriginalKey, '/', -1)) AS ImageUrl
+FROM GeoGuesses g
+JOIN GeoLocations l ON g.LocationId = l.LocationId
+WHERE g.UserId = 'e212a426-e8a1-46fd-bb50-ed5cd04df72e'
+ORDER BY g.CreatedAt DESC
+LIMIT 0, 10;
 
 
 
 
 
-
+DROP TRIGGER IF EXISTS trg_GuessAttempt;
+DROP TRIGGER IF EXISTS trg_GuessWallet;
+DROP TRIGGER IF EXISTS trg_UpdateError;
