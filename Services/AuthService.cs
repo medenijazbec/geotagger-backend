@@ -206,29 +206,70 @@ namespace geotagger_backend.Services
             return result;
         }
 
+        // Services/AuthService.cs
         public async Task<string?> ExternalLoginAsync(ExternalLoginDto dto)
         {
-            string? email = dto.Provider.ToLower() switch
+          
+            /* 1. Validate the provider-specific token                    */
+            string? email = dto.Provider.ToLowerInvariant() switch
             {
                 "google" => await ValidateGoogleAsync(dto.IdToken),
                 "facebook" => await ValidateFacebookAsync(dto.IdToken),
                 _ => null
             };
+            if (email is null) return null;                // bad token
 
-            if (email == null) return null;
+          
+            /* 2. Load or create the Identity user                        */
+            var user = await _userManager.FindByEmailAsync(email);
+            var isNewIdentityUser = false;
 
-            // find or create local user
-            var user = await _userManager.FindByEmailAsync(email)
-                       ?? new ApplicationUser { Email = email, UserName = email };
-
-            if (string.IsNullOrEmpty(user.Id))
+            if (user is null)
             {
+                user = new ApplicationUser
+                {
+                    UserName = email,
+                    NormalizedUserName = email.ToUpperInvariant(),
+                    Email = email,
+                    NormalizedEmail = email.ToUpperInvariant(),
+                    EmailConfirmed = true
+                };
                 var cr = await _userManager.CreateAsync(user);
-                if (!cr.Succeeded) return null;
+                if (!cr.Succeeded) return null;             // should not happen
+                isNewIdentityUser = true;
             }
 
+        
+            /* 3. Ensure the GeoUser wallet row exists                    */
+           
+            var geo = await _db.GeoUsers.FindAsync(user.Id);
+            if (geo is null)                               // first-time registration
+            {
+                geo = new GeoUser                           // initial 100 pts
+                {
+                    UserId = user.Id,
+                    GamePoints = 100
+                };
+                _db.GeoUsers.Add(geo);
+
+                _db.GeoPointsTransactions.Add(new GeoPointsTransaction
+                {
+                    UserId = user.Id,
+                    PointsDelta = 100,
+                    Reason = PointsReason.registration_bonus
+                });
+            }
+
+           
+            /* 4. Persist everything */
+      
+            await _db.SaveChangesAsync();
+
+        
+            // 5. Hand out a fresh JWT*/
             return await GenerateJwtToken(user);
         }
+
 
         private async Task<string?> ValidateGoogleAsync(string idToken)
         {
