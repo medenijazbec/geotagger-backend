@@ -10,6 +10,8 @@ using System.Security.Claims;
 using geotagger_backend.Helpers;
 using System.Security.Cryptography;
 using geotagger_backend.Data;
+using DotNetEnv;
+using static System.Net.WebRequestMethods;
 
 
 namespace geotagger_backend.Controllers
@@ -28,12 +30,17 @@ namespace geotagger_backend.Controllers
         private readonly IConfiguration _config;
         private readonly string _frontendBaseUrl;
         private readonly ApplicationDbContext _db;
+        private readonly IWebHostEnvironment _env;
+        private readonly IHttpClientFactory _http;
 
         public AuthController(
-      IAuthService authService,
-      SignInManager<ApplicationUser> signInManager,
-      UserManager<ApplicationUser> userManager,
-      IConfiguration config, ApplicationDbContext db)
+            IAuthService authService,
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            IConfiguration config,
+            ApplicationDbContext db,
+            IWebHostEnvironment env,               
+            IHttpClientFactory http)              
         {
             _authService = authService;
             _signInManager = signInManager;
@@ -41,6 +48,8 @@ namespace geotagger_backend.Controllers
             _config = config;
             _frontendBaseUrl = _config["FRONTEND_BASE_URL"] ?? "http://localhost:5173/";
             _db = db;
+            _env = env;      
+            _http = http;     
         }
 
         /// <summary>
@@ -191,7 +200,7 @@ namespace geotagger_backend.Controllers
 
             /* ── BASIC CLAIMS ─────────────────────────────────────────────── */
             var email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                         ?? info.Principal.FindFirstValue("email");
+                           ?? info.Principal.FindFirstValue("email");
             var givenName = info.Principal.FindFirstValue(ClaimTypes.GivenName) ?? string.Empty;
             var familyName = info.Principal.FindFirstValue(ClaimTypes.Surname) ?? string.Empty;
             var fullName = info.Principal.Identity?.Name ?? string.Empty;
@@ -211,8 +220,10 @@ namespace geotagger_backend.Controllers
                         : fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).LastOrDefault()
                         ?? "User";
 
-            if (string.IsNullOrWhiteSpace(avatarUrl))
-                avatarUrl = "/images/default_avatar.png";
+            /* mirror the avatar once – or fall back to placeholder */
+            avatarUrl = !string.IsNullOrWhiteSpace(avatarUrl)
+                      ? await MirrorExternalAvatarAsync(avatarUrl)
+                      : "/images/default_avatar.png";
 
             var displayName = info.ProviderDisplayName ?? info.LoginProvider ?? "External";
 
@@ -246,8 +257,7 @@ namespace geotagger_backend.Controllers
                         FirstName = first,
                         LastName = last,
                         ProfilePictureUrl = avatarUrl,
-                        // dummy password so PasswordHash is never null
-                        PasswordHash = Convert.ToHexString(RandomNumberGenerator.GetBytes(64))
+                        PasswordHash = Convert.ToHexString(RandomNumberGenerator.GetBytes(64)) // dummy pwd
                     };
                     await _userManager.CreateAsync(user);
                 }
@@ -261,13 +271,14 @@ namespace geotagger_backend.Controllers
                 await _userManager.AddLoginAsync(user, loginInfo);
             }
 
-            /* ── ENSURE WALLET ROW + 100-POINT BONUS ──────────────────────── */
+            /* ── WALLET ROW + 100-POINT BONUS IF NEEDED ───────────────────── */
             await EnsureGeoUserAsync(user.Id);
 
-            /* ── ISSUE JWT AND REDIRECT BACK TO FRONTEND ──────────────────── */
+            /* ── ISSUE JWT & REDIRECT BACK TO FRONTEND ────────────────────── */
             var jwt = await _authService.GenerateJwtForUserAsync(user);
             return Redirect($"{_frontendBaseUrl}/home?externalLogin=success&token={Uri.EscapeDataString(jwt)}");
         }
+
 
         private async Task EnsureGeoUserAsync(string userId)
         {
@@ -322,6 +333,36 @@ namespace geotagger_backend.Controllers
         }
 
 
+        private async Task<string> MirrorExternalAvatarAsync(string remoteUrl)
+        {
+            // Defensive – unknown or obviously bad URLs fall back to the placeholder
+            if (string.IsNullOrWhiteSpace(remoteUrl) || remoteUrl.Length > 500)
+                return "/images/default_avatar.png";
+
+            var client = _http.CreateClient();          // _http is injected IHttpClientFactory
+            using var resp = await client.GetAsync(remoteUrl, HttpCompletionOption.ResponseHeadersRead);
+            if (!resp.IsSuccessStatusCode ||
+                !resp.Content.Headers.ContentType?.MediaType.StartsWith("image/") == true)
+                return "/images/default_avatar.png";
+
+            var ext = resp.Content.Headers.ContentType.MediaType switch
+            {
+                "image/png" => ".png",
+                "image/gif" => ".gif",
+                _ => ".jpg"
+            };
+
+            var fileName = $"{Guid.NewGuid():N}{ext}";
+            var avatarsDir = Path.Combine(_env.WebRootPath, "avatars");
+            Directory.CreateDirectory(avatarsDir);
+            var localPath = Path.Combine(avatarsDir, fileName);
+
+            await using (var fs = System.IO.File.Create(localPath))
+                await resp.Content.CopyToAsync(fs);
+
+            // Public URL – Program.cs will expose /avatars/*
+            return $"/avatars/{fileName}";
+        }
 
 
 

@@ -250,16 +250,39 @@ using (var scope = app.Services.CreateScope())
 
 
 
+// 0) Resolve & ensure the folders exist
+var webRoot = builder.Environment.WebRootPath
+                ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 
+var imagesPath = Path.Combine(webRoot, "images");
+var avatarsPath = Path.Combine(webRoot, "avatars");
 
-//app.UseCors("FrontendPolicy");
+Directory.CreateDirectory(imagesPath);
+Directory.CreateDirectory(avatarsPath);
 
-//serve wwwroot/images at /images/*
+// 1)  /images/*  →  wwwroot/images/*
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(                 //*where* to look dsioajdhuaiwsgdgzauw
-        Path.Combine(builder.Environment.WebRootPath, "images")),
-    RequestPath = "/images"                                  //same public URL
+    FileProvider = new PhysicalFileProvider(imagesPath),
+    RequestPath = "/images",
+    ServeUnknownFileTypes = false,          // refuse .exe, .ps1, …
+    OnPrepareResponse = ctx =>          // short-circuit caching
+    {
+        ctx.Context.Response.Headers["Cache-Control"] = "no-store";
+    }
+});
+
+// 2)  /avatars/*  →  wwwroot/avatars/*
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(avatarsPath),
+    RequestPath = "/avatars",
+    ServeUnknownFileTypes = false,
+    OnPrepareResponse = ctx =>
+    {
+        // avatars may be cached for a day
+        ctx.Context.Response.Headers["Cache-Control"] = "public,max-age=86400";
+    }
 });
 
 
@@ -275,21 +298,7 @@ if (app.Environment.IsDevelopment())
 }
 
 
-// STATIC FILES: *only* expose your /images folder here
 
-//Building a provider that points at wwwroot/images
-var imagesPath = Path.Combine(builder.Environment.WebRootPath, "images");
-var imagesProvider = new PhysicalFileProvider(imagesPath);
-
-//only this one middleware to serve /images/* → wwwroot/images/*
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = imagesProvider,
-    RequestPath = "/images",
-    //never serve unknown file types as a fallback
-    ServeUnknownFileTypes = false,
-
-});
 
 //NO other `UseStaticFiles()` calls
 //NO calls to `UseDirectoryBrowser()`
