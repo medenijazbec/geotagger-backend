@@ -555,6 +555,22 @@ WHERE g.UserId = 'e212a426-e8a1-46fd-bb50-ed5cd04df72e'
 ORDER BY g.CreatedAt DESC
 LIMIT 0, 10;
 
+SELECT * FROM AspNetRoleClaims;
+SELECT * FROM AspNetRoles;
+SELECT * FROM AspNetUserClaims;
+SELECT * FROM AspNetUserLogins;
+SELECT * FROM AspNetUserRoles;
+SELECT * FROM AspNetUsers;
+SELECT * FROM AspNetUserTokens;
+
+SELECT * FROM GeoGuesses;
+SELECT * FROM GeoLocations;
+SELECT * FROM GeoNotifications;
+SELECT * FROM GeoPasswordResetTokens;
+SELECT * FROM GeoPointsTransactions;
+SELECT * FROM GeoRefreshTokens;
+SELECT * FROM GeoUserActionTypes;
+SELECT * FROM GeoUsers;
 
 
 

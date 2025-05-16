@@ -1,10 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using geotagger_backend.DTOs;
 using geotagger_backend.Models;
 using geotagger_backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using geotagger_backend.Helpers;
+using System.Security.Cryptography;
+using geotagger_backend.Data;
+
 
 namespace geotagger_backend.Controllers
 {
@@ -17,10 +23,24 @@ namespace geotagger_backend.Controllers
         /// registration, login, password reset, and (optional) email confirmation.
         /// </summary>
         private readonly IAuthService _authService;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _config;
+        private readonly string _frontendBaseUrl;
+        private readonly ApplicationDbContext _db;
 
-        public AuthController(IAuthService authService)
+        public AuthController(
+      IAuthService authService,
+      SignInManager<ApplicationUser> signInManager,
+      UserManager<ApplicationUser> userManager,
+      IConfiguration config, ApplicationDbContext db)
         {
             _authService = authService;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _config = config;
+            _frontendBaseUrl = _config["FRONTEND_BASE_URL"] ?? "http://localhost:5173/";
+            _db = db;
         }
 
         /// <summary>
@@ -148,6 +168,120 @@ namespace geotagger_backend.Controllers
 
             return Ok(new { Token = token });
         }
+
+
+        [HttpGet("ExternalLogin")]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Auth", new { returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return Challenge(properties, provider);
+        }
+
+        [HttpGet("ExternalLoginCallback")]
+        public async Task<IActionResult> ExternalLoginCallback(
+        string? returnUrl = null, string? remoteError = null)
+        {
+            if (remoteError != null)
+                return Redirect($"{_frontendBaseUrl}/signin?externalLogin=error&message={Uri.EscapeDataString(remoteError)}");
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+                return Redirect($"{_frontendBaseUrl}/signin?externalLogin=error&message=No external login info.");
+
+            /* ── BASIC CLAIMS ────────────────────────────────────────── */
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email) ?? info.Principal.FindFirstValue("email");
+            var givenName = info.Principal.FindFirstValue(ClaimTypes.GivenName) ?? string.Empty;
+            var familyName = info.Principal.FindFirstValue(ClaimTypes.Surname) ?? string.Empty;
+            var fullName = info.Principal.Identity?.Name ?? string.Empty;
+            var avatarUrl = info.Principal.FindFirstValue("picture");
+
+            if (string.IsNullOrWhiteSpace(email))
+                return Redirect($"{_frontendBaseUrl}/signin?externalLogin=error&message=No email from provider.");
+
+            /* ── DERIVE SAFE FALL-BACKS ─────────────────────────────── */
+            var first = !string.IsNullOrWhiteSpace(givenName) ? givenName
+                      : fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()
+                      ?? "GoogleUser";
+
+            var last = !string.IsNullOrWhiteSpace(familyName)
+                      ? familyName
+                      : fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries).LastOrDefault()
+                      ?? "User";
+
+            if (string.IsNullOrWhiteSpace(avatarUrl))
+                avatarUrl = "/images/default_avatar.png";       // your own placeholder
+
+            var displayName = info.ProviderDisplayName ?? info.LoginProvider ?? "External";
+
+            /* ── TRY SIGN-IN BY EXTERNAL LOGIN KEY ─────────────────── */
+            var signIn = await _signInManager.ExternalLoginSignInAsync(
+                            info.LoginProvider, info.ProviderKey, false);
+
+            ApplicationUser user;
+
+            if (signIn.Succeeded)
+            {
+                user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey)!;
+
+                await PatchProviderDisplayNameAsync(user, info, displayName);
+                await user.UpdateProfileAsync(_userManager, first, last, avatarUrl);
+            }
+            else
+            {
+                /* ── FIRST-TIME WITH THIS PROVIDER ──────────────────── */
+                user = await _userManager.FindByEmailAsync(email);
+
+                if (user == null)
+                {
+                    user = new ApplicationUser
+                    {
+                        UserName = email,
+                        NormalizedUserName = email.ToUpperInvariant(),
+                        Email = email,
+                        NormalizedEmail = email.ToUpperInvariant(),
+                        EmailConfirmed = true,
+                        FirstName = first,
+                        LastName = last,
+                        ProfilePictureUrl = avatarUrl,
+                        /* fake password so PasswordHash is never NULL        */
+                        PasswordHash = Convert.ToHexString(RandomNumberGenerator.GetBytes(64))
+                    };
+                    await _userManager.CreateAsync(user);
+                    _db.GeoUsers.Add(new GeoUser { UserId = user.Id });  // initial points row
+                    await _db.SaveChangesAsync();
+                }
+                else
+                {
+                    await user.EnsureCoreIdentityFieldsAsync(_userManager, email);
+                    await user.UpdateProfileAsync(_userManager, first, last, avatarUrl);
+                }
+
+                var loginInfo = new UserLoginInfo(info.LoginProvider, info.ProviderKey, displayName);
+                await _userManager.AddLoginAsync(user, loginInfo);
+            }
+
+            var jwt = await _authService.GenerateJwtForUserAsync(user);
+            return Redirect($"{_frontendBaseUrl}/home?externalLogin=success&token={Uri.EscapeDataString(jwt)}");
+        }
+
+        private async Task PatchProviderDisplayNameAsync(
+        ApplicationUser user, ExternalLoginInfo info, string displayName)
+        {
+            var login = (await _userManager.GetLoginsAsync(user))
+                        .First(l => l.LoginProvider == info.LoginProvider &&
+                                    l.ProviderKey == info.ProviderKey);
+
+            if (string.IsNullOrEmpty(login.ProviderDisplayName))
+            {
+                await _userManager.RemoveLoginAsync(user, login.LoginProvider, login.ProviderKey);
+                await _userManager.AddLoginAsync(
+                        user,
+                        new UserLoginInfo(login.LoginProvider, login.ProviderKey, displayName));
+            }
+        }
+
+
 
 
 

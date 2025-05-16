@@ -13,11 +13,12 @@ using Microsoft.Extensions.FileProviders;
 using System;
 using geotagger_backend.Middleware;
 using System.Globalization;
+using geotagger_backend.Helpers;
+
+
+DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
-
-
-
 
 // Add CORS support
 builder.Services.AddCors(options =>
@@ -51,6 +52,27 @@ builder.Services.AddCors(options =>
           .AllowCredentials();
     });
 });*/
+
+// using Microsoft.AspNetCore.Authentication.Google;
+
+//GOOGLE AUTH
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Auth:Google:ClientId"];
+        options.ClientSecret = builder.Configuration["Auth:Google:ClientSecret"];
+        options.CallbackPath = "/signin-google";
+    });
+/*
+//FACEBOOOK AUTH
+builder.Services.AddAuthentication()
+    .AddFacebook(options =>
+    {
+        options.AppId = builder.Configuration["AUTH__FACEBOOK__APPID"];
+        options.AppSecret = builder.Configuration["AUTH__FACEBOOK__APPSECRET"];
+        options.CallbackPath = "/signin-facebook"; // default
+    });
+*/
 
 
 //configure DB Context with MySQL.

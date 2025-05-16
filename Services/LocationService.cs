@@ -29,29 +29,31 @@ namespace geotagger_backend.Services
         }
 
         // geotagger_backend/Services/LocationService.cs
-        public async Task<LocationDto> UploadLocationAsync(string userId, LocationUploadDto dto, string bucketBaseUrl)
+        public async Task<LocationDto> UploadLocationAsync(
+            string userId,
+            LocationUploadDto dto,
+            string bucketBaseUrl)
         {
-            // validate coords...
-            if (dto.Latitude < -90 || dto.Latitude > 90 || dto.Longitude < -180 || dto.Longitude > 180)
+            /* ── 0.  BASIC VALIDATION ───────────────────────────────────────── */
+            if (dto.Latitude is < -90 or > 90 ||
+                dto.Longitude is < -180 or > 180)
                 throw new ArgumentOutOfRangeException("Coordinates out of valid range.");
 
-            // 1) point at wwwroot/images
-            var folder = Path.Combine(_env.WebRootPath, "images");
-            Directory.CreateDirectory(folder);
+            /* ── 1.  SAVE IMAGE TO wwwroot/images/ ──────────────────────────── */
+            var imagesFolder = Path.Combine(_env.WebRootPath, "images");
+            Directory.CreateDirectory(imagesFolder);
 
-            // 2) unique filename: GUID + original extension
             var fileName = $"{Guid.NewGuid():N}{Path.GetExtension(dto.Image.FileName)}";
-            var filePath = Path.Combine(folder, fileName);
+            var filePath = Path.Combine(imagesFolder, fileName);
 
-            // 3) save to disk
-            await using var fs = System.IO.File.Create(filePath);
-            await dto.Image.CopyToAsync(fs);
+            await using (var fs = System.IO.File.Create(filePath))
+                await dto.Image.CopyToAsync(fs);
 
-            // 4) build your EF entity
+            /* ── 2.  INSERT GeoLocation ─────────────────────────────────────── */
             var loc = new GeoLocation
             {
                 UploaderId = userId,
-                S3OriginalKey = $"images/{fileName}",    // your “path” inside wwwroot
+                S3OriginalKey = $"images/{fileName}",   // relative path under wwwroot
                 Title = dto.Title,
                 Description = dto.Description,
                 Latitude = Math.Round(dto.Latitude, 6),
@@ -59,9 +61,27 @@ namespace geotagger_backend.Services
             };
 
             await _db.GeoLocations.AddAsync(loc);
-            await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();             // loc.LocationId is now available
 
-            // 5) return the DTO, pointing at /images/<guid>
+            /* ── 3.  REWARD UPLOADER (+10 pts) & UPDATE STATS ───────────────── */
+            var geo = await _db.GeoUsers.FindAsync(userId);
+            if (geo != null)
+            {
+                geo.GamePoints += 10;
+                geo.TotalLocationsUploaded += 1;
+
+                _db.GeoPointsTransactions.Add(new GeoPointsTransaction
+                {
+                    UserId = userId,
+                    LocationId = loc.LocationId,
+                    PointsDelta = 10,
+                    Reason = PointsReason.upload_reward
+                });
+
+                await _db.SaveChangesAsync();
+            }
+
+            /* ── 4.  RETURN DTO ─────────────────────────────────────────────── */
             return new LocationDto
             {
                 LocationId = loc.LocationId,
@@ -72,6 +92,7 @@ namespace geotagger_backend.Services
                 ImageUrl = $"{bucketBaseUrl}/images/{fileName}"
             };
         }
+
 
         public async Task<IEnumerable<LocationDto>> GetUserLocationsAsync(
      string userId, int page, int pageSize)

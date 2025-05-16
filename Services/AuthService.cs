@@ -12,6 +12,7 @@ using geotagger_backend.Models;
 using Google.Apis.Auth;
 using System.Text.Json;
 using geotagger_backend.Data;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace geotagger_backend.Services
 {
@@ -22,19 +23,21 @@ namespace geotagger_backend.Services
         private readonly IConfiguration _configuration;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ApplicationDbContext _db;
+        private readonly IConfiguration _config;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IConfiguration configuration,
             IHttpClientFactory httpClientFactory,
-            ApplicationDbContext db)
+            ApplicationDbContext db, IConfiguration config)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _httpClientFactory = httpClientFactory;
             _db = db;
+            _config = config;
         }
 
         /// <summary>
@@ -55,18 +58,25 @@ namespace geotagger_backend.Services
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
-            if (!result.Succeeded)
-            {
-               
+            if (!result.Succeeded)                       // bail out on validation errors
                 return result;
-            }
 
+            // ── WALLET & LEDGER ────────────────────────────────────────────────
+            var geoUser = new GeoUser           // starts with 100 pts
+            {
+                UserId = user.Id,
+                GamePoints = 100
+            };
+            _db.GeoUsers.Add(geoUser);
 
-            _db.GeoUsers.Add(new GeoUser { UserId = user.Id });
+            _db.GeoPointsTransactions.Add(new GeoPointsTransaction
+            {
+                UserId = user.Id,
+                PointsDelta = 100,
+                Reason = PointsReason.registration_bonus
+            });
 
-          
-            await _db.SaveChangesAsync();
-
+            await _db.SaveChangesAsync();       // one round-trip is fine here
             return result;
         }
 
@@ -249,6 +259,45 @@ namespace geotagger_backend.Services
 
             return null;
         }
+        public async Task<string> GenerateJwtForUserAsync(ApplicationUser user)
+        {
+            // Prefer env vars, fallback to appsettings.json
+            var jwtKey = _config["JWT__KEY"] ?? _config["Jwt:Key"];
+            var jwtIssuer = _config["JWT__ISSUER"] ?? _config["Jwt:Issuer"];
+            var jwtAudience = _config["JWT__AUDIENCE"] ?? _config["Jwt:Audience"];
+            var expiresStr = _config["JWT__EXPIRESMIN"] ?? _config["Jwt:ExpiresInMinutes"];
+
+            if (string.IsNullOrWhiteSpace(jwtKey) ||
+                string.IsNullOrWhiteSpace(jwtIssuer) ||
+                string.IsNullOrWhiteSpace(jwtAudience))
+                throw new InvalidOperationException("Missing JWT configuration values.");
+
+            var claims = new List<Claim>
+    {
+        new Claim(JwtRegisteredClaimNames.Sub,  user.Id),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+        new Claim(JwtRegisteredClaimNames.Jti,  Guid.NewGuid().ToString()),
+        new Claim("firstName", user.FirstName ?? string.Empty),
+        new Claim("lastName",  user.LastName  ?? string.Empty)
+    };
+
+            foreach (var role in await _userManager.GetRolesAsync(user))
+                claims.Add(new Claim(ClaimTypes.Role, role));
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.UtcNow.AddMinutes(int.TryParse(expiresStr, out var m) ? m : 60);
+
+            var token = new JwtSecurityToken(
+                issuer: jwtIssuer,
+                audience: jwtAudience,
+                claims: claims,
+                expires: expires,
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
 
 
 
