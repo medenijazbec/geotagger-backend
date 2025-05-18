@@ -1,0 +1,6 @@
+@geotagger_backend_HostAddress = http://localhost:5204
+
+GET {{geotagger_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
