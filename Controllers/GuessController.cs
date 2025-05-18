@@ -14,7 +14,7 @@ namespace geotagger_backend.Controllers
         private readonly IGuessService _svc;
         public GuessController(IGuessService svc) => _svc = svc;
 
-        [HttpPost]
+        /*[HttpPost]
         public async Task<IActionResult> MakeGuess([FromBody] GuessDto dto)
         {
             var userId = User.FindFirst("id")?.Value;
@@ -29,7 +29,21 @@ namespace geotagger_backend.Controllers
             {
                 return BadRequest(new { error = ex.Message });
             }
+        }*/
+
+        //use missleware to handle excetion if it throws
+        [HttpPost]
+        public async Task<IActionResult> MakeGuess([FromBody] GuessDto dto)
+        {
+            var userId = User.FindFirst("id")?.Value;
+            if (userId == null) return Unauthorized();
+
+            var res = await _svc.MakeGuessAsync(userId, dto);
+            return Ok(res);
         }
+
+
+
         [HttpGet("personal-best")]
         public async Task<IActionResult> GetPersonalBest([FromQuery] int page = 1, [FromQuery] int pageSize = 3)
         {

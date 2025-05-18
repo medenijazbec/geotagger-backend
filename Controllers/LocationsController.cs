@@ -91,6 +91,7 @@ namespace geotagger_backend.Controllers
         /* 4.  UPDATE (multipart/form-data)                                */
         /* ──────────────────────────────────────────────────────────────── */
 
+        /*
         [HttpPut("{id:int}")]
         [Authorize]
         [Consumes("multipart/form-data")]
@@ -112,7 +113,24 @@ namespace geotagger_backend.Controllers
             {
                 return BadRequest(new { error = ex.Message });
             }
+        }*/
+
+
+        //usses midleware to format excetion etc
+        [HttpPut("{id:int}")]
+        [Authorize]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateLocation(int id,[FromForm] LocationUploadDto dto)
+        {
+            var userId = User.FindFirst("id")?.Value;
+            if (userId == null) return Unauthorized();
+
+            var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
+
+            var updated = await _svc.UpdateLocationAsync(id, userId, dto, baseUrl);
+            return Ok(updated);
         }
+
 
         /* ──────────────────────────────────────────────────────────────── */
         /* 5.  DELETE (soft-delete by default)                             */

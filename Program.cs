@@ -234,7 +234,7 @@ if (!app.Environment.IsDevelopment())
     // Adds Strict-Transport-Security header
     app.UseHsts();
 }
-
+app.UseExceptionHandlerMiddleware();
 var culture = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = culture;
 CultureInfo.DefaultThreadCurrentUICulture = culture;
