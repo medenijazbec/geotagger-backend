@@ -25,6 +25,8 @@ namespace geotagger_backend.Data
 
         public DbSet<Notification> Notifications => Set<Notification>();
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+       
+        //public DbSet<RefreshToken> GeoRefreshTokens => Set<RefreshToken>();
 
 
         // ───── Fluent mappings (only relationships / column types) ─────────

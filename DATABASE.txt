@@ -215,7 +215,7 @@ ALTER TABLE GeoRefreshTokens
 CREATE TABLE GeoPasswordResetTokens (
   ResetId    BIGINT       NOT NULL AUTO_INCREMENT,
   UserId     VARCHAR(450) NOT NULL,
-  Token      CHAR(64)     NOT NULL,
+  Token      TEXT     NOT NULL,
   ExpiresAt  DATETIME     NOT NULL,
   UsedAt     DATETIME     NULL,
   CreatedAt  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -437,6 +437,7 @@ WHERE g.UserId = 'e212a426-e8a1-46fd-bb50-ed5cd04df72e'
 ORDER BY g.CreatedAt DESC
 LIMIT 0, 10;
 
+SELECT @@global.time_zone, @@session.time_zone;
 
 
 SELECT * FROM AspNetRoleClaims;

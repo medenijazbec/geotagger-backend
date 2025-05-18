@@ -242,8 +242,7 @@ namespace geotagger_backend.Services
         /// </summary>
         /// <param name="dto">Data transfer object containing the user's email.</param>
         /// <returns>A successful <see cref="IdentityResult"/> regardless of email existence.</returns>
-        //Forgot password: generate a password reset token and  TODO: email it
-
+        
         // AuthService.cs  – inside class AuthService
         public async Task<IdentityResult> ForgotPasswordAsync(ForgotPasswordDto dto)
         {
@@ -252,26 +251,27 @@ namespace geotagger_backend.Services
             if (user == null)
                 return IdentityResult.Success;
 
-            // 2. Generate a one-time token and persist it
-            var tokenString = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
-            var expiresAt = DateTime.UtcNow.AddHours(2);
+            // 2. Generate the ASP.NET Identity password reset token
+            var identityToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            // Store in GeoPasswordResetTokens (assuming EF DbSet<GeoPasswordResetToken> is configured)
+            // 3. Store the token in DB for auditing
+            var expiresAt = DateTime.UtcNow.AddHours(1);
+
             var resetEntry = new GeoPasswordResetToken
             {
                 UserId = user.Id,
-                Token = tokenString,
+                Token = identityToken,      // Store the Identity token
                 ExpiresAt = expiresAt,
                 CreatedAt = DateTime.UtcNow
             };
             _db.Add(resetEntry);
             await _db.SaveChangesAsync();
 
-            // 3. Build the reset-password URL
+            // 4. Build the reset-password URL, ensure encode the token for the URL
             var frontend = _config["FRONTEND_BASE_URL"] ?? "http://localhost:5173";
-            var resetUrl = $"{frontend}/reset-password?uid={user.Id}&tok={Uri.EscapeDataString(tokenString)}";
+            var resetUrl = $"{frontend}/reset-password?uid={user.Id}&tok={Uri.EscapeDataString(identityToken)}";
 
-            // 4. Send the e-mail
+            // 5. Send the e-mail
             await _mailer.SendAsync(
                 user.Email!,
                 "Reset your Geotagger password",
@@ -281,9 +281,10 @@ namespace geotagger_backend.Services
            <p>This link will expire at {expiresAt:yyyy-MM-dd HH:mm} UTC.</p>
            <p>If you didn’t request this, you can safely ignore this e-mail.</p>");
 
-            // 5. Always succeed to avoid account enumeration
+            // 6. Always succeed to avoid account enumeration
             return IdentityResult.Success;
         }
+
 
 
 

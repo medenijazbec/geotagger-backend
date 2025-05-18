@@ -12,25 +12,25 @@ namespace geotagger_backend.Models
         public long TokenId { get; set; }
 
         [Required]
-        [Column("RefreshToken", TypeName = "char(64)")]
+        [Column("RefreshToken", TypeName = "char(88)")]
         public string Token { get; set; } = null!;
 
         [Required]
         [Column("ExpiresAt")]
         public DateTime ExpiresAt { get; set; }
 
-        [Column("RevokedAt")]
-        public DateTime? RevokedAt { get; set; }
-
         [Column("CreatedAt")]
         public DateTime CreatedAt { get; set; }
 
-        [Column("ReplacedByToken", TypeName = "char(64)")]
+        [Column("RevokedAt")]
+        public DateTime? RevokedAt { get; set; }
+
+        [Column("ReplacedByToken", TypeName = "char(88)")]
         public string? ReplacedByToken { get; set; }
 
         [Required]
         public string UserId { get; set; } = null!;
-
         public ApplicationUser User { get; set; } = null!;
     }
+
 }
