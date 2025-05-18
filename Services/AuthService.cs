@@ -14,6 +14,8 @@ using System.Text.Json;
 using geotagger_backend.Data;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using geotagger_backend.Helpers;
+using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
 
 namespace geotagger_backend.Services
 {
@@ -123,30 +125,76 @@ namespace geotagger_backend.Services
         {
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null || string.IsNullOrWhiteSpace(user.UserName))
-            {
                 return new LoginResult { Success = false, Error = "Invalid email or password." };
-            }
 
             if (!user.EmailConfirmed)
-            {
                 return new LoginResult { Success = false, Error = "Please confirm your email before signing in." };
-            }
 
-            var signInResult = await _signInManager.PasswordSignInAsync(
-              user.UserName,
-              dto.Password,
-              isPersistent: false,
-              lockoutOnFailure: false);
-
-            if (!signInResult.Succeeded)
-            {
+            var signIn = await _signInManager.PasswordSignInAsync(
+                user.UserName, dto.Password, isPersistent: false, lockoutOnFailure: false);
+            if (!signIn.Succeeded)
                 return new LoginResult { Success = false, Error = "Invalid email or password." };
+
+            // 1) generate JWT
+            var jwt = await GenerateJwtToken(user);
+
+            // 2) create & persist refresh token
+            var newRt = new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                ExpiresAt = DateTime.UtcNow.AddDays(30),
+                CreatedAt = DateTime.UtcNow,
+                UserId = user.Id
+            };
+            _db.RefreshTokens.Add(newRt);
+            await _db.SaveChangesAsync();
+
+            return new LoginResult
+            {
+                Success = true,
+                Token = jwt,
+                RefreshToken = newRt.Token
+            };
+        }
+        public async Task<LoginResult> RefreshTokenAsync(string refreshToken)
+        {
+            var existing = await _db.RefreshTokens
+                .FirstOrDefaultAsync(r => r.Token == refreshToken);
+
+            if (existing == null
+                || existing.ExpiresAt < DateTime.UtcNow
+                || existing.RevokedAt != null)
+            {
+                return new LoginResult { Success = false, Error = "Invalid refresh token." };
             }
 
-            // generate and return JWT token
-            var token = await GenerateJwtToken(user);
-            return new LoginResult { Success = true, Token = token };
+            // revoke old
+            existing.RevokedAt = DateTime.UtcNow;
+
+            // issue new JWT
+            var user = await _userManager.FindByIdAsync(existing.UserId);
+            var jwt = await GenerateJwtToken(user!);
+
+            // persist rotated refresh-token
+            var newRt = new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                ExpiresAt = DateTime.UtcNow.AddDays(30),
+                CreatedAt = DateTime.UtcNow,
+                ReplacedByToken = existing.Token,
+                UserId = user!.Id
+            };
+            _db.RefreshTokens.Add(newRt);
+            await _db.SaveChangesAsync();
+
+            return new LoginResult
+            {
+                Success = true,
+                Token = jwt,
+                RefreshToken = newRt.Token
+            };
         }
+
 
 
         /// <summary>
@@ -199,33 +247,44 @@ namespace geotagger_backend.Services
         // AuthService.cs  – inside class AuthService
         public async Task<IdentityResult> ForgotPasswordAsync(ForgotPasswordDto dto)
         {
-            /* 1.  Find the user (same response even if not found) */
+            // 1. Find the user (same response even if not found)
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null)
-            {
-                // never reveal whether the address exists
                 return IdentityResult.Success;
-            }
 
-            /* 2.  Build the reset-password link that points to React */
-            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            // 2. Generate a one-time token and persist it
+            var tokenString = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+            var expiresAt = DateTime.UtcNow.AddHours(2);
 
+            // Store in GeoPasswordResetTokens (assuming EF DbSet<GeoPasswordResetToken> is configured)
+            var resetEntry = new GeoPasswordResetToken
+            {
+                UserId = user.Id,
+                Token = tokenString,
+                ExpiresAt = expiresAt,
+                CreatedAt = DateTime.UtcNow
+            };
+            _db.Add(resetEntry);
+            await _db.SaveChangesAsync();
+
+            // 3. Build the reset-password URL
             var frontend = _config["FRONTEND_BASE_URL"] ?? "http://localhost:5173";
-            var resetUrl = $"{frontend}/reset-password" +
-                           $"?uid={user.Id}&tok={Uri.EscapeDataString(resetToken)}";
+            var resetUrl = $"{frontend}/reset-password?uid={user.Id}&tok={Uri.EscapeDataString(tokenString)}";
 
-            /* 3.  Send the message (via IEmailService injected as _mailer) */
+            // 4. Send the e-mail
             await _mailer.SendAsync(
-                user.Email!,                           // to
-                "Reset your Geotagger password",       // subject
+                user.Email!,
+                "Reset your Geotagger password",
                 $@"<p>Hello {user.FirstName},</p>
-            <p>You asked to reset your password.</p>
-            <p><a href=""{resetUrl}"">Click here to choose a new one</a>.</p>
-            <p>If you didn’t request this, you can safely ignore the e-mail.</p>");
+           <p>You asked to reset your password.</p>
+           <p><a href=""{resetUrl}"">Click here to choose a new one</a>.</p>
+           <p>This link will expire at {expiresAt:yyyy-MM-dd HH:mm} UTC.</p>
+           <p>If you didn’t request this, you can safely ignore this e-mail.</p>");
 
-            /* 4.  Always succeed (to avoid account enumeration)      */
+            // 5. Always succeed to avoid account enumeration
             return IdentityResult.Success;
         }
+
 
 
 
@@ -262,6 +321,25 @@ namespace geotagger_backend.Services
         //reset the users password using the provided token
         public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto dto)
         {
+            // 0. Validate the reset-token record
+            var resetEntry = await _db.GeoPasswordResetTokens
+                .FirstOrDefaultAsync(r =>
+                    r.UserId == dto.UserId &&
+                    r.Token == dto.Token);
+
+            if (resetEntry == null ||
+                resetEntry.ExpiresAt < DateTime.UtcNow ||
+                resetEntry.UsedAt != null)
+            {
+                var err = new IdentityError
+                {
+                    Code = "InvalidToken",
+                    Description = "Reset token is invalid, expired, or already used."
+                };
+                return IdentityResult.Failed(err);
+            }
+
+            // 1. Find the user
             var user = await _userManager.FindByIdAsync(dto.UserId);
             if (user == null)
             {
@@ -273,6 +351,7 @@ namespace geotagger_backend.Services
                 return IdentityResult.Failed(error);
             }
 
+            // 2. Verify password confirmation
             if (dto.NewPassword != dto.ConfirmPassword)
             {
                 var error = new IdentityError
@@ -283,9 +362,18 @@ namespace geotagger_backend.Services
                 return IdentityResult.Failed(error);
             }
 
+            // 3. Perform the reset
             var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
-            return result;
+            if (!result.Succeeded)
+                return result;
+
+            // 4. Mark the token as used
+            resetEntry.UsedAt = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+
+            return IdentityResult.Success;
         }
+
 
         // Services/AuthService.cs
         public async Task<string?> ExternalLoginAsync(ExternalLoginDto dto)

@@ -21,7 +21,11 @@ namespace geotagger_backend.Data
         public DbSet<GeoGuess> GeoGuesses => Set<GeoGuess>();
         public DbSet<GeoPointsTransaction> GeoPointsTransactions => Set<GeoPointsTransaction>();
         public DbSet<GeoUserActionLog> GeoUserActionLogs => Set<GeoUserActionLog>();
+        public DbSet<GeoPasswordResetToken> GeoPasswordResetTokens => Set<GeoPasswordResetToken>();
+
         public DbSet<Notification> Notifications => Set<Notification>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
 
         // ───── Fluent mappings (only relationships / column types) ─────────
         protected override void OnModelCreating(ModelBuilder builder)

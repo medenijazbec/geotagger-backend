@@ -206,6 +206,11 @@ CREATE TABLE GeoRefreshTokens (
   INDEX IX_RefreshTokens_User (UserId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE GeoRefreshTokens
+  MODIFY COLUMN RefreshToken    CHAR(88)    NOT NULL,
+  MODIFY COLUMN ReplacedByToken CHAR(88);
+
+
 -- 2.5  Password-reset tokens
 CREATE TABLE GeoPasswordResetTokens (
   ResetId    BIGINT       NOT NULL AUTO_INCREMENT,

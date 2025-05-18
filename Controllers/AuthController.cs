@@ -129,6 +129,20 @@ namespace geotagger_backend.Controllers
             });
         }
 
+        /// <summary>Rotate an existing refresh token into a new JWT + refresh.</summary>
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Refresh([FromBody] RefreshRequestDto dto)
+        {
+            var result = await _authService.RefreshTokenAsync(dto.RefreshToken);
+            if (!result.Success)
+                return Unauthorized(new { Error = result.Error });
+            return Ok(new
+            {
+                Token = result.Token,
+                RefreshToken = result.RefreshToken
+            });
+        }
 
         /// <summary>
         /// Initiates a password reset process by sending a reset link to the user's email.
