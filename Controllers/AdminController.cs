@@ -225,39 +225,35 @@ public sealed class AdminController : ControllerBase
     // GET: api/Admin/activity-log
     [HttpGet("activity-log")]
     public async Task<IActionResult> GetActivityLog(
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 100)
+      [FromQuery] int page = 1,
+      [FromQuery] int pageSize = 100)
     {
         page = Math.Max(1, page);
         pageSize = Math.Clamp(pageSize, 1, 500);
 
-        var q = _db.GeoUserActionLogs
-            .Include(log => log.GeoUser)
-                .ThenInclude(geoUser => geoUser.Identity)
-            .AsNoTracking()
-            .Where(l => l.GeoUser != null && l.GeoUser.Identity != null) // INNER JOIN
-            .OrderByDescending(l => l.ActionTimestamp);
+        var q = from log in _db.GeoUserActionLogs
+                join user in _db.Users on log.UserId equals user.Id into userJoin
+                from user in userJoin.DefaultIfEmpty()
+                orderby log.ActionTimestamp descending
+                select new ActivityLogDto(
+                    log.ActionId,
+                    log.UserId,
+                    user != null ? user.Email : null,
+                    user != null ? user.FirstName : null,
+                    user != null ? user.LastName : null,
+                    log.ActionType,
+                    log.ComponentType,
+                    log.NewValue,
+                    log.Url,
+                    log.ActionTimestamp
+                );
 
         var total = await q.CountAsync();
-
-        var items = await q.Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .Select(l => new ActivityLogDto(
-                l.ActionId,
-                l.UserId,
-                l.GeoUser.Identity.Email,
-                l.GeoUser.Identity.FirstName,
-                l.GeoUser.Identity.LastName,
-                l.ActionType,
-                l.ComponentType,
-                l.NewValue,
-                l.Url,
-                l.ActionTimestamp
-            ))
-            .ToListAsync();
+        var items = await q.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
         return Ok(new PagedResult<ActivityLogDto>(total, items));
     }
+
 
 
 
