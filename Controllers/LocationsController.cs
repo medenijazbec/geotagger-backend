@@ -65,7 +65,7 @@ namespace geotagger_backend.Controllers
         /* ──────────────────────────────────────────────────────────────── */
         /* 2.  SINGLE LOCATION  – used on the guess page                   */
         /* ──────────────────────────────────────────────────────────────── */
-
+        [AllowAnonymous]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
