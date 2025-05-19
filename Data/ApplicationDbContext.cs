@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using geotagger_backend.Models;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Reflection.Emit;
 
 namespace geotagger_backend.Data
 {
@@ -65,6 +66,10 @@ namespace geotagger_backend.Data
                    .HasOne(g => g.User)
                    .WithMany(u => u.Guesses)
                    .HasForeignKey(g => g.UserId);
+
+            builder.Entity<GeoUserActionLog>()
+                    .Property(e => e.ActionType)
+                    .HasConversion<string>();
 
             /* FULL-PRECISION coordinates  (±90 / ±180 with 8-dp) */
             builder.Entity<GeoLocation>(e =>

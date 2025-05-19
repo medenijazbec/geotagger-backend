@@ -208,31 +208,36 @@ namespace geotagger_backend.Services
             var jwt = _configuration.GetSection("Jwt").Get<JwtSettings>();
             var key = Encoding.UTF8.GetBytes(jwt.Key);
 
-            var claims = new List<Claim> {
+            var claims = new List<Claim>
+    {
         new Claim(JwtRegisteredClaimNames.Sub, user.Email),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         new Claim(ClaimTypes.NameIdentifier, user.Id),
         new Claim("id", user.Id)
-      };
+    };
+
+            // Add external flag if needed (optional)
             var isExternal = await _userManager.IsExternalAsync(user);
             claims.Add(new Claim("external", isExternal ? "1" : "0"));
+
+            // 🔥 Add all user roles as claims
             var roles = await _userManager.GetRolesAsync(user);
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var token = new JwtSecurityTokenHandler().CreateToken(
-              new SecurityTokenDescriptor
-              {
-                  Subject = new ClaimsIdentity(claims),
-                  Expires = DateTime.UtcNow.AddMinutes(jwt.ExpiresInMinutes),
-                  Issuer = jwt.Issuer,
-                  Audience = jwt.Audience,
-                  SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256)
-              });
-
-
-
+                new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.UtcNow.AddMinutes(jwt.ExpiresInMinutes),
+                    Issuer = jwt.Issuer,
+                    Audience = jwt.Audience,
+                    SigningCredentials = new SigningCredentials(
+                        new SymmetricSecurityKey(key),
+                        SecurityAlgorithms.HmacSha256)
+                });
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -242,7 +247,7 @@ namespace geotagger_backend.Services
         /// </summary>
         /// <param name="dto">Data transfer object containing the user's email.</param>
         /// <returns>A successful <see cref="IdentityResult"/> regardless of email existence.</returns>
-        
+
         // AuthService.cs  – inside class AuthService
         public async Task<IdentityResult> ForgotPasswordAsync(ForgotPasswordDto dto)
         {
@@ -473,7 +478,6 @@ namespace geotagger_backend.Services
         // Services/AuthService.cs
         public async Task<string> GenerateJwtForUserAsync(ApplicationUser user)
         {
-            /* ── 1.  load JWT settings (env-vars win over appsettings.json) ───────── */
             var jwtKey = _config["JWT__KEY"] ?? _config["Jwt:Key"];
             var jwtIssuer = _config["JWT__ISSUER"] ?? _config["Jwt:Issuer"];
             var jwtAudience = _config["JWT__AUDIENCE"] ?? _config["Jwt:Audience"];
@@ -484,30 +488,25 @@ namespace geotagger_backend.Services
                 string.IsNullOrWhiteSpace(jwtAudience))
                 throw new InvalidOperationException("Missing JWT configuration values.");
 
-            /* ── 2.  build the claim set ──────────────────────────────────────────── */
             var claims = new List<Claim>
     {
-        // keep Sub on the e-mail so the front-end’s “sub” debug logging is unchanged
-        new Claim(JwtRegisteredClaimNames.Sub,    user.Email ?? string.Empty),
-
-        new Claim(JwtRegisteredClaimNames.Jti,    Guid.NewGuid().ToString()),
-        new Claim(JwtRegisteredClaimNames.Email,  user.Email ?? string.Empty),
-
-        // ─ added: what all controllers use to identify the caller ─
+        new Claim(JwtRegisteredClaimNames.Sub, user.Email ?? string.Empty),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
         new Claim(ClaimTypes.NameIdentifier, user.Id),
-        new Claim("id",                       user.Id),
-
+        new Claim("id", user.Id),
         new Claim("firstName", user.FirstName ?? string.Empty),
-        new Claim("lastName",  user.LastName  ?? string.Empty),
-
-        // let the UI / policy logic still distinguish external accounts
+        new Claim("lastName", user.LastName ?? string.Empty),
         new Claim("external", "1")
     };
 
-            foreach (var role in await _userManager.GetRolesAsync(user))
+            // 🔥 Add all roles the user has
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
                 claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
-            /* ── 3.  mint and return the token ────────────────────────────────────── */
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.UtcNow.AddMinutes(int.TryParse(expiresStr, out var m) ? m : 60);
@@ -518,6 +517,7 @@ namespace geotagger_backend.Services
                 claims: claims,
                 expires: expires,
                 signingCredentials: creds);
+
             await EnsureGeoUserAsync(user.Id);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
