@@ -3,6 +3,7 @@ using geotagger_backend.DTOs;
 using geotagger_backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace geotagger_backend.Controllers
@@ -23,6 +24,42 @@ namespace geotagger_backend.Controllers
             _db = db;
             _logger = logger;
         }
+
+        [AllowAnonymous]
+        [HttpPost("log-action")]
+        public async Task<IActionResult> LogAction([FromBody] GeoUserActionLogDto dto)
+        {
+            // Always prefer the User GUID from JWT if authenticated
+            string? userId = null;
+            if (User?.Identity?.IsAuthenticated == true)
+            {
+                userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // this is the GUID!
+            }
+            // Only fallback to dto.UserId if not authenticated (for guests)
+            if (string.IsNullOrEmpty(userId)) userId = dto.UserId;
+
+            // If still no userId (should almost never happen), reject
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("No user id");
+
+            var log = new GeoUserActionLog
+            {
+                UserId = userId,
+                ActionType = dto.ActionType,
+                ComponentType = dto.ComponentType,
+                NewValue = dto.NewValue,
+                Url = dto.Url,
+                ActionTimestamp = DateTime.UtcNow
+            };
+
+            _db.GeoUserActionLogs.Add(log);
+            await _db.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
+
 
         // Accept both single object and array (RTK Query, Axios, etc. might send either)
         [HttpPost("client-action")]

@@ -221,7 +221,7 @@ public sealed class AdminController : ControllerBase
 
     /*──────────────────────────────  ACTIVITY LOGS  ──────────────────────────────*/
 
-    // GET: api/Admin/activity-log
+
     // GET: api/Admin/activity-log
     [HttpGet("activity-log")]
     public async Task<IActionResult> GetActivityLog(
@@ -235,6 +235,7 @@ public sealed class AdminController : ControllerBase
             .Include(log => log.GeoUser)
                 .ThenInclude(geoUser => geoUser.Identity)
             .AsNoTracking()
+            .Where(l => l.GeoUser != null && l.GeoUser.Identity != null) // INNER JOIN
             .OrderByDescending(l => l.ActionTimestamp);
 
         var total = await q.CountAsync();
@@ -244,10 +245,9 @@ public sealed class AdminController : ControllerBase
             .Select(l => new ActivityLogDto(
                 l.ActionId,
                 l.UserId,
-                l.GeoUser != null && l.GeoUser.Identity != null ? l.GeoUser.Identity.Email : null,
-                l.GeoUser != null && l.GeoUser.Identity != null
-                    ? (l.GeoUser.Identity.FirstName + " " + l.GeoUser.Identity.LastName)
-                    : null,
+                l.GeoUser.Identity.Email,
+                l.GeoUser.Identity.FirstName,
+                l.GeoUser.Identity.LastName,
                 l.ActionType,
                 l.ComponentType,
                 l.NewValue,
@@ -258,6 +258,8 @@ public sealed class AdminController : ControllerBase
 
         return Ok(new PagedResult<ActivityLogDto>(total, items));
     }
+
+
 
 
     // DELETE: api/Admin/activity-log/{id}
