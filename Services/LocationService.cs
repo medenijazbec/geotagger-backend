@@ -157,7 +157,7 @@ namespace geotagger_backend.Services
         {
             var l = await _db.GeoLocations
                              .Where(lc => lc.IsActive)
-                             .OrderBy(lc => lc.LocationId)
+                             .OrderBy(lc => lc.LocationId)   // deterministic order
                              .Skip(offset)
                              .FirstOrDefaultAsync();
 
@@ -171,7 +171,9 @@ namespace geotagger_backend.Services
                 Description = l.Description,
                 Latitude = l.Latitude,
                 Longitude = l.Longitude,
-                ImageUrl = $"/locations/{Path.GetFileName(l.S3OriginalKey)}"
+
+                //  point to static /images/… instead of the non-existent /locations/
+                ImageUrl = $"/{l.S3OriginalKey}"           //  /images/abcd1234.jpg”
             };
         }
         public async Task<LocationDto> UpdateLocationAsync(int locationId, string userId, LocationUploadDto dto, string baseUrl)
@@ -182,7 +184,7 @@ namespace geotagger_backend.Services
                 throw new ArgumentException("Location not found or not owned by user.");
 
             // 2) delete old file
-            var oldKey = loc.S3OriginalKey;                    // e.g. "images/{guid}.jpg"
+            var oldKey = loc.S3OriginalKey;                    //  "images/{guid}.jpg"
             var oldPath = Path.Combine(_env.WebRootPath, oldKey);
             if (File.Exists(oldPath)) File.Delete(oldPath);
 
