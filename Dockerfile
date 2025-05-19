@@ -14,6 +14,9 @@ RUN dotnet publish "geotagger-backend.csproj" -c Release -o /app/publish
 
 # ─────────runtime stage ─────────
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+RUN apk add --no-cache icu-libs
+ENV DOTNET_ICU_DIR=/usr/lib/icu
 WORKDIR /app
 COPY --from=build /app/publish .
 

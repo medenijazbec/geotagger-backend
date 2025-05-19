@@ -20,7 +20,16 @@ DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("SMTP"));
+builder.Services.Configure<EmailSettings>(options =>
+{
+    options.Host = Environment.GetEnvironmentVariable("SMTP__HOST");
+    options.Port = int.TryParse(Environment.GetEnvironmentVariable("SMTP__PORT"), out var port) ? port : 587;
+    options.User = Environment.GetEnvironmentVariable("SMTP__USER");
+    options.Pass = Environment.GetEnvironmentVariable("SMTP__PASS");
+    options.UseSsl = bool.TryParse(Environment.GetEnvironmentVariable("SMTP__USESSL"), out var ssl) ? ssl : true;
+    options.From = Environment.GetEnvironmentVariable("SMTP__FROM");
+});
+
 builder.Services.AddTransient<IEmailService, EmailService>();
 
 // Add CORS support
@@ -68,8 +77,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthentication()
     .AddGoogle(options =>
     {
-        options.ClientId = builder.Configuration["Auth:Google:ClientId"];
-        options.ClientSecret = builder.Configuration["Auth:Google:ClientSecret"];
+        options.ClientId = Environment.GetEnvironmentVariable("AUTH__GOOGLE__CLIENTID");
+        options.ClientSecret = Environment.GetEnvironmentVariable("AUTH__GOOGLE__CLIENTSECRET");
         options.CallbackPath = "/signin-google";
     });
 /*
@@ -85,10 +94,21 @@ builder.Services.AddAuthentication()
 
 
 //configure DB Context with MySQL.
+/*
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
+    )
+);*/
+
+
+//use .env
+var dbConnStr = Environment.GetEnvironmentVariable("DB_CONN_STR");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(
+        dbConnStr,
+        ServerVersion.AutoDetect(dbConnStr)
     )
 );
 
@@ -112,17 +132,56 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 //configure JWT from settings.
+/*
 var jwtSettingsSection = builder.Configuration.GetSection("Jwt");
 builder.Services.Configure<JwtSettings>(jwtSettingsSection);
 var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
 var key = Encoding.UTF8.GetBytes(jwtSettings.Key);
+*/
+
+var jwtKey = Environment.GetEnvironmentVariable("JWT__KEY");
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT__ISSUER");
+var jwtAudience = Environment.GetEnvironmentVariable("JWT__AUDIENCE");
+var jwtExpires = Environment.GetEnvironmentVariable("JWT__EXPIRESINMINUTES");
+
+var key = Encoding.UTF8.GetBytes(jwtKey);
+
+// If you need to provide JwtSettings to DI:
+builder.Services.Configure<JwtSettings>(options => {
+    options.Key = jwtKey;
+    options.Issuer = jwtIssuer;
+    options.Audience = jwtAudience;
+    options.ExpiresInMinutes = int.TryParse(jwtExpires, out var x) ? x : 60;
+});
+
+
 
 //configure JWT authentication.
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
+})//updated jwt to pull from .env
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtIssuer,
+            ValidateAudience = true,
+            ValidAudience = jwtAudience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero,
+
+            NameClaimType = "id",
+            RoleClaimType = ClaimTypes.Role
+        };
+    });
+
+    /*
 .AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -137,11 +196,11 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero,
 
-        /*make BOTH follow the same rule */
-        NameClaimType = "id",                     // what i just put in the token
+        
+        NameClaimType = "id",                 
         RoleClaimType = ClaimTypes.Role
-    };
-});
+    };*/
+
 
 //register custom authentication service
 builder.Services.AddScoped<IAuthService, AuthService>();
