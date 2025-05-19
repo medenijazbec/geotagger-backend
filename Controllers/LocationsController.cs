@@ -8,6 +8,7 @@ namespace geotagger_backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class LocationsController : ControllerBase
     {
         private readonly ILocationService _svc;
@@ -48,6 +49,7 @@ namespace geotagger_backend.Controllers
         /* ──────────────────────────────────────────────────────────────── */
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Browse(
             [FromQuery] int page = 1,
             [FromQuery] int? size = null,                                         // legacy param
@@ -76,6 +78,7 @@ namespace geotagger_backend.Controllers
         /* ──────────────────────────────────────────────────────────────── */
 
         [HttpGet("random")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetRandomLocation()
         {
             var total = await _svc.CountActiveAsync();

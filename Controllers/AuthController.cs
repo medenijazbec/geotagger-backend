@@ -110,6 +110,7 @@ namespace geotagger_backend.Controllers
         /// <c>401 Unauthorized</c> when credentials are invalid.
         /// </returns>
         // POST: api/Auth/login
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
@@ -153,6 +154,7 @@ namespace geotagger_backend.Controllers
         /// <c>400 Bad Request</c> if the request fails due to service errors.
         /// </returns>
         // POST: api/Auth/forgot-password
+        [AllowAnonymous]
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
@@ -175,6 +177,7 @@ namespace geotagger_backend.Controllers
         /// <c>200 OK</c> when password is reset successfully.
         /// <c>400 Bad Request</c> if reset fails due to invalid token or other errors.</returns>
         // POST: api/Auth/reset-password
+        [AllowAnonymous]
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
         {
@@ -190,6 +193,7 @@ namespace geotagger_backend.Controllers
         }
 
         /// POST: api/Auth/external-login
+        [AllowAnonymous]
         [HttpPost("external-login")]
         public async Task<IActionResult> ExternalLogin([FromBody] ExternalLoginDto dto)
         {
@@ -200,7 +204,7 @@ namespace geotagger_backend.Controllers
             return Ok(new { Token = token });
         }
 
-
+        [AllowAnonymous]
         [HttpGet("ExternalLogin")]
         public IActionResult ExternalLogin(string provider, string returnUrl)
         {
@@ -208,10 +212,10 @@ namespace geotagger_backend.Controllers
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
-
+        [AllowAnonymous]
         [HttpGet("ExternalLoginCallback")]
         public async Task<IActionResult> ExternalLoginCallback(
-    string? returnUrl = null, string? remoteError = null)
+            string? returnUrl = null, string? remoteError = null)
         {
             if (remoteError != null)
                 return Redirect($"{_frontendBaseUrl}/signin?externalLogin=error&message={Uri.EscapeDataString(remoteError)}");
@@ -301,7 +305,7 @@ namespace geotagger_backend.Controllers
             return Redirect($"{_frontendBaseUrl}/home?externalLogin=success&token={Uri.EscapeDataString(jwt)}");
         }
 
-
+        [AllowAnonymous]
         private async Task EnsureGeoUserAsync(string userId)
         {
             var geo = await _db.GeoUsers.FindAsync(userId);
@@ -337,7 +341,7 @@ namespace geotagger_backend.Controllers
             await _db.SaveChangesAsync();
         }
 
-
+        [AllowAnonymous]
         private async Task PatchProviderDisplayNameAsync(
         ApplicationUser user, ExternalLoginInfo info, string displayName)
         {
@@ -354,7 +358,7 @@ namespace geotagger_backend.Controllers
             }
         }
 
-
+        [AllowAnonymous]
         private async Task<string> MirrorExternalAvatarAsync(string remoteUrl)
         {
             // Defensive – unknown or obviously bad URLs fall back to the placeholder
