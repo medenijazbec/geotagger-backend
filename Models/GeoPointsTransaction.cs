@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace geotagger_backend.Models
 {
-    public enum PointsReason { registration_bonus, upload_reward, guess_cost }
+    public enum PointsReason { registration_bonus, upload_reward, guess_cost, guess_accuracy_reward }
 
     public class GeoPointsTransaction
     {
@@ -13,6 +13,8 @@ namespace geotagger_backend.Models
         public int? GuessId { get; set; }
         public int PointsDelta { get; set; }
         public PointsReason Reason { get; set; }
+
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         /* navigation */

@@ -466,6 +466,13 @@ DROP TRIGGER IF EXISTS trg_GuessAttempt;
 DROP TRIGGER IF EXISTS trg_GuessWallet;
 DROP TRIGGER IF EXISTS trg_UpdateError;
 
+ALTER TABLE GeoPointsTransactions
+  MODIFY Reason ENUM(
+    'registration_bonus',
+    'upload_reward',
+    'guess_cost',
+    'guess_accuracy_reward'
+  ) NOT NULL;
 
 
 -- 1. change the default that EF uses when it inserts the row

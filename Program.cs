@@ -181,25 +181,25 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-    /*
+/*
 .AddJwtBearer(options =>
 {
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidIssuer = jwtSettings.Issuer,
-        ValidateAudience = true,
-        ValidAudience = jwtSettings.Audience,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
+options.TokenValidationParameters = new TokenValidationParameters
+{
+    ValidateIssuer = true,
+    ValidIssuer = jwtSettings.Issuer,
+    ValidateAudience = true,
+    ValidAudience = jwtSettings.Audience,
+    ValidateIssuerSigningKey = true,
+    IssuerSigningKey = new SymmetricSecurityKey(key),
 
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero,
+    ValidateLifetime = true,
+    ClockSkew = TimeSpan.Zero,
 
-        
-        NameClaimType = "id",                 
-        RoleClaimType = ClaimTypes.Role
-    };*/
+
+    NameClaimType = "id",                 
+    RoleClaimType = ClaimTypes.Role
+};*/
 
 
 //register custom authentication service
@@ -427,8 +427,7 @@ Console.WriteLine($"SMTP HOST = {smtpHost}");
 app.Run();
 
 
-
-
+public partial class Program { }
 
 
 

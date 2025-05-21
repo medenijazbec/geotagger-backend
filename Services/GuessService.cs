@@ -46,7 +46,7 @@ namespace geotagger_backend.Services
                 AttemptNumber = attemptNumber
             };
 
-            // 5) create the ledger transaction
+            // 5) create the ledger transaction (deduct cost)
             var tx = new GeoPointsTransaction
             {
                 UserId = userId,
@@ -55,13 +55,34 @@ namespace geotagger_backend.Services
                 Guess = guess
             };
 
-            // 6) update wallet
+            // 6) update wallet (deduct)
             wallet.GamePoints -= cost;
             wallet.TotalGuessesMade++;
 
-            // 7) stage and save
+            // ** NEW: 7) Calculate and award accuracy points **
+            int baseAward = 1000;
+            double factor = 2.0; // Lose 2 points per meter error
+            int award = Math.Max(0, (int)Math.Round(baseAward - error * factor));
+
+            GeoPointsTransaction? txAward = null;
+            if (award > 0)
+            {
+                txAward = new GeoPointsTransaction
+                {
+                    UserId = userId,
+                    PointsDelta = award,
+                    Reason = PointsReason.guess_accuracy_reward,
+                    Guess = guess
+                };
+                wallet.GamePoints += award;
+                _db.GeoPointsTransactions.Add(txAward);
+            }
+            // ** END NEW **
+
+            // 8) stage and save (as before)
             _db.GeoGuesses.Add(guess);
             _db.GeoPointsTransactions.Add(tx);
+
             await _db.SaveChangesAsync();
 
             return new GuessResultDto
@@ -69,9 +90,11 @@ namespace geotagger_backend.Services
                 LocationId = dto.LocationId,
                 ErrorMeters = Math.Round(error, 2),
                 AttemptNumber = attemptNumber,
-                RemainingPoints = wallet.GamePoints
+                RemainingPoints = wallet.GamePoints,
+                AwardedPoints = award   // <-- add this property to your DTO if you want to display it
             };
         }
+
 
 
         /*anti-join/NOT EXISTS pattern makes sure i only take the best guess for each location for the user (lowest error earliest if tie).
